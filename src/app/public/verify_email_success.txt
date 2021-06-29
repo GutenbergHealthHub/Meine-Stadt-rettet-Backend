@@ -1,0 +1,33 @@
+Lieber Ersthelfer,
+
+du hast Deine Emailadresse erfolgreich bestätigt. Bitte melde Dich jetzt in der App mit deinen Zugangsdaten an. Solltest du Dein Passwort vergessen haben, so schreibe bitte eine E-Mail an info@meinestadtrettet.de, Betreff: Zugangsdaten vergessen.
+
+Ziel der Initiative "Meine Stadt rettet" ist es, dass Betroffenen bei einem Herzstillstand schnell und qualifiziert geholfen wird. Hierfür sind aktuelle Kenntnisse und Fertigkeiten in Basismaßnahmen der Wiederbelebung essentiell.
+
+Wir bitten Dich daher als nächstes, über die App die folgenden Informationen nachzutragen:
+
+-Deine Unterschrift auf der Grundvereinbarung.
+-Eine aktuelle Bescheinigung über die Teilnahme an einem Erste Hilfe- bzw. BLS-Kurs, oder einen vergleichbaren Nachweis über Deine Qualifikation als Ersthelfer. Mehr Informationen findest Du unter {{link}}.
+-Dein Geburtsdatum, Deine vollständige Anschrift, sowie Telefonnummer und Beruf. Diese Informationen sind notwendig, damit Dich die Leitstelle bei einem Notfall erreichen kann. Zudem erlauben wir aus Versicherungsgründen nur die Teilnahme von Ersthelfer die über 18 Jahre alt sind.
+
+Um die oben genannten Informationen einzureichen, gehst Du als IPHONE Benutzer wie folgt in der App vor:
+
+-Zunächst klickst Du auf den Menüpunkt "Mehr". Den Menüpunkt findest Du unten rechts.
+-Solltest Du bereits angemeldet sein, dann klicke auf Deinen Namen {{firstname}} {{lastname}}. Ansonsten melde dich zuerst mit Deinen Zugangsdaten an.
+-In der neuen Ansicht findest Du Deinen aktuellen Status und alle notwendigen Schritte, die Du durchführen musst um freigeschaltet zu werden. Dein Status ist im Moment "Inaktiv".
+-Die Informationen, die Du bereits eingereicht hast werden mit einem grünen Haken markiert. Fehlende Informationen mit einem roten Kreuz.
+
+Als ANDROID Benutzer gehst du wie folgt vor:
+-Zunächst öffnest Du das Menü oben links.
+-Anschießend navigierst Du zu dem Menüpunkt "Status". Solltest du den Menüpunkt nicht sehen, so melde Dich zunächst mit deinen Zugangsdaten an.
+-In der neuen Ansicht findest Du alle notwendigen Schritte, die Du durchführen musst um freigeschaltet zu werden. Aktuell ist dein Status mit "Inaktiv" gekennzeichnet.
+-Die Informationen, die Du bereits eingereicht hast werden mit einem grünen Haken markiert. Fehlende Informationen mit einem roten Kreuz.
+
+Für die Auffrischung von Erste-Hilfe-Kenntnissen stellen wir momentan Schulungstermine in Deiner Region zusammen. Diese werden Dir sobald sie verfügbar sind in der App unter Kurse angezeigt.
+
+Die Teilnahme an einem Erste-Hilfe Kurs sollte nicht länger als 24 Monate zurück liegen.
+
+Bei Fragen zögere nicht, uns direkt zu kontaktieren.
+Viele Grüße
+
+Dein Meine-Stadt-rettet Team

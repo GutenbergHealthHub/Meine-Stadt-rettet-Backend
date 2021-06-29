@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"location":"2d"},"name":"location_2d"}],"uuid":"f1d41dac03244f8d9688d8764e2f48ce","collectionName":"ControlCenter"}

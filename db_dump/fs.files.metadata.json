@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"msr.fs.files"},{"v":2,"key":{"filename":1},"name":"filename_1","ns":"msr.fs.files"}],"uuid":"c44970cd86d448c3a920b9de3d57dbb8"}

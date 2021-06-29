@@ -1,0 +1,32 @@
+version: "3"
+services:
+  app:
+    container_name: msr
+    restart: always
+    env_file:
+      - env.env
+    build: .
+    ports:
+      - "5000:5000"
+    links:
+      - mongo
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+    - "27018:27017"
+
+  dashboard:
+    image: parseplatform/parse-dashboard
+    volumes:
+      - ./parse-dashboard.json:/src/Parse-Dashboard/parse-dashboard-config.json
+    links:
+      - app
+    depends_on:
+      - app
+    ports:
+      - 4040:4040
+    environment:
+      - PARSE_DASHBOARD_ALLOW_INSECURE_HTTP=1
+

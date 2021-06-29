@@ -1,0 +1,13 @@
+﻿Dear {{firstname}} {{lastname}},
+
+thank you for sending us your documents. We checked everything carefully and are pleased to tell you that you are completely unlocked for the First Responder App.
+
+We are sure you will act carefully with the responsibility and are happy to welcome you in our first responder network. 
+
+At the moment we are growing fast and are planning the integration of new regions. As the only App in the world we fulfil data privacy and insurance requirements. Our system is connected to more than 50% of the emergency control centers in Germany.
+
+We are updating the App constantly with new features. We will provide you more information about new features in the news section of the App. 
+In order to maintain a high quality of resuscitation your last BLS/ALS course shouldn´t be older than 24 month. Help us to recruit more members – only with a strong network we can really save lifes!
+
+Best regards
+Your First Responder App Team

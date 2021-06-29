@@ -1,0 +1,211 @@
+{
+	"info": {
+		"_postman_id": "aa032a7f-527a-4fca-a462-83e76ef3b3e1",
+		"name": "Retter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Loc",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Parse-Application-Id",
+						"value": "MSROpenSourceAPPID",
+						"type": "text"
+					},
+					{
+						"key": "X-Parse-REST-API-Key",
+						"value": "MSROpenSourceRestApiKey",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "173.193.75.11:30934/parse/classes/Emergency?where={\"objectId\":\"Epm6ebgmqv\"}",
+					"host": [
+						"173",
+						"193",
+						"75",
+						"11"
+					],
+					"port": "30934",
+					"path": [
+						"parse",
+						"classes",
+						"Emergency"
+					],
+					"query": [
+						{
+							"key": "where",
+							"value": "{\"objectId\":\"Epm6ebgmqv\"}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Parse-Application-Id",
+						"value": "MSROpenSourceAPPID",
+						"type": "text"
+					},
+					{
+						"key": "X-Parse-REST-API-Key",
+						"value": "MSROpenSourceRestApiKey",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"location\": {\r\n\"__type\": \"GeoPoint\",\r\n\"latitude\": 48.2670555,\r\n\"longitude\": 11.677272999\r\n},\r\n\"controlCenterRelation\": {\r\n\"__type\": \"Pointer\",\r\n\"className\": \"ControlCenter\",\r\n\"objectId\": \" QSvlT095CP\"\r\n},\r\n\"lastname\": \"Maier\",\r\n\"username\": \"maiman\",\r\n\"password\":\"passwort1234\",\r\n\"firstname\":\"Manfred\",\r\n\"email\":\"manfredmaier@hotmail.com\",\r\n\"zip\":\"01345\",\r\n\"city\":\"Hamburg\",\r\n\"country\":\"Deutschland\",\r\n\"birthdate\":{\r\n                \"__type\": \"Date\",\r\n                \"iso\": \"1900-01-01T06:11:00.000Z\"\r\n            },\r\n\"sound\":\"idonthaveacluewhatthisisfor\",\r\n\"qualification\":\"3\",\r\n\"profession\":\"2\",\r\n\"code\":2,\r\n\"phoneNumber\":1234472357823405,\r\n\"phoneCode\":1234,\r\n\"activated\":true,\r\n\"comments\":\"Naal ok zin los vahriin\",\r\n\"lastBLSCourse\":\"2020-01-01T23:28:56.782Z\",\r\n\"insuranceType\":\"Haftpflicht\",\r\n\"state\": \"3\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "173.193.75.11:30934/parse/classes/_User",
+					"host": [
+						"173",
+						"193",
+						"75",
+						"11"
+					],
+					"port": "30934",
+					"path": [
+						"parse",
+						"classes",
+						"_User"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Parse-Application-Id",
+						"value": "MSROpenSourceAPPID",
+						"type": "text"
+					},
+					{
+						"key": "X-Parse-REST-API-Key",
+						"value": "MSROpenSourceRestApiKey",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "173.193.75.11:30934/parse/classes/_User?where={\"objectId\":\"5wBt7iJqkI\"}",
+					"host": [
+						"173",
+						"193",
+						"75",
+						"11"
+					],
+					"port": "30934",
+					"path": [
+						"parse",
+						"classes",
+						"_User"
+					],
+					"query": [
+						{
+							"key": "where",
+							"value": "{\"objectId\":\"5wBt7iJqkI\"}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Emergency",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Parse-Application-Id",
+						"value": "MSROpenSourceAPPID",
+						"type": "text"
+					},
+					{
+						"key": "X-Parse-REST-API-Key",
+						"value": "MSROpenSourceRestApiKey",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"locationPoint\": {\r\n\"__type\": \"GeoPoint\",\r\n\"latitude\": 48.2670555,\r\n\"longitude\": 11.677272999\r\n},\r\n\"controlCenterRelation\": {\r\n\"__type\": \"Pointer\",\r\n\"className\": \"ControlCenter\",\r\n\"objectId\": \" QSvlT095CP\"\r\n},\r\n\"state\": 0,\r\n\"keyword\": \" NOTF NA REA 103\",\r\n\"objectName\": \"Cafe Neuhaus\",\r\n\"streetName\": \"Musterstr\",\r\n\"streetNumber\": \"5\",\r\n\"zip\": \"01345\",\r\n\"city\": \"Hamburg\",\r\n\"country\": \"Deutschland\",\r\n\"patientName\": \"Hans Mustermann\",\r\n\"indicatorName\": \"Rainer Ersthelfer\",\r\n\"emergencyNumber\": 12345678,\r\n\"informationString\": \"Verletzte weibliche Person vor dem Cafe Neuhaus\"\r\n}"
+				},
+				"url": {
+					"raw": "173.193.75.11:30934/parse/classes/Emergency",
+					"host": [
+						"173",
+						"193",
+						"75",
+						"11"
+					],
+					"port": "30934",
+					"path": [
+						"parse",
+						"classes",
+						"Emergency"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

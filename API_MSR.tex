@@ -1,0 +1,275 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{bera}% optional: just to have a nice mono-spaced font
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{longtable}
+
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+	basicstyle=\normalfont\ttfamily,
+	numbers=none,
+	numberstyle=\scriptsize,
+	stepnumber=1,
+	numbersep=8pt,
+	showstringspaces=false,
+	breaklines=true,
+	frame=none,
+	literate=
+	*{0}{{{\color{numb}0}}}{1}
+	{1}{{{\color{numb}1}}}{1}
+	{2}{{{\color{numb}2}}}{1}
+	{3}{{{\color{numb}3}}}{1}
+	{4}{{{\color{numb}4}}}{1}
+	{5}{{{\color{numb}5}}}{1}
+	{6}{{{\color{numb}6}}}{1}
+	{7}{{{\color{numb}7}}}{1}
+	{8}{{{\color{numb}8}}}{1}
+	{9}{{{\color{numb}9}}}{1}
+	{:}{{{\color{punct}{:}}}}{1}
+	{,}{{{\color{punct}{,}}}}{1}
+	{\{}{{{\color{delim}{\{}}}}{1}
+	{\}}{{{\color{delim}{\}}}}}{1}
+	{[}{{{\color{delim}{[}}}}{1}
+	{]}{{{\color{delim}{]}}}}{1},
+}
+
+
+
+
+\title{Meine-Stadt-rettet OpenSource\protect\\ Interface Specification}
+\author{Melanie Reuter-Oppermann, Florian Dorfhuber}
+\begin{document}
+	\maketitle
+	\section{Introduction}
+	
+	
+	\section{User}
+	\begin{tabular}{ |c|c| }
+		\hline
+		& Create User\\
+		\hline \hline
+		TYPE & POST \\ \hline
+		URL & https://<server>/parse/classes/\textunderscore User \\ \hline
+		Header & \begin{lstlisting}[language=json,firstnumber=1]
+X-Parse-Application-Id:<ID>
+X-Parse-REST-API-Key:<Key>
+Cache-Control:no-cache
+Content-Type:application/json
+		\end{lstlisting} \\ \hline
+		Body & 
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+	"location": {
+		"__type": "GeoPoint",
+		"latitude": 48.2670555,
+		"longitude": 11.677272999
+	},
+	"controlCenterRelation": {
+		"__type": "Pointer",
+		"className": "ControlCenter",
+		"objectId": " QSvlT095CP"
+	},
+	"lastname": "Maier",
+	"username": "maiman",
+	"password":"passwort1234",
+	"firstname":"Manfred",
+	"email":"manfredmaier@hotmail.com",
+	"zip":"01345",
+	"city":"Hamburg",
+	"country":"Deutschland",
+	"birthdate":{
+		"__type": "Date",
+		"iso": "1900-01-01T06:11:00.000Z"
+	},
+	"sound":"idonthaveacluewhatthisisfor",
+	"qualification":"3",
+	"profession":"2",
+	"code":2,
+	"phoneNumber":1234472357823405,
+	"phoneCode":1234,
+	"activated":true,
+	"comments":"Naal ok zin los vahriin",
+	"lastBLSCourse":"2020-01-01T23:28:56.782Z",
+	"insuranceType":"Haftpflicht",
+	"state": "3"
+}
+	\end{lstlisting} \\ \hline
+	Result & \begin{lstlisting}[language=json,firstnumber=1]
+	{
+	"objectId": "FpR7Ls8XcG",
+	"createdAt": "2020-06-21T21:14:14.995Z",
+	"sessionToken": "r:cb344cd6accf62e766e6dc59a73d1f7d"
+	}
+	\end{lstlisting} \\ \hline
+\end{tabular}
+\begin{longtable}{ |c|c| }
+	\hline
+	& Get User\\
+	\hline \hline
+	TYPE & GET \\ \hline
+	URL & https://<server>/parse/classes/\textunderscore User \\ \hline
+	Header & \begin{lstlisting}[language=json,firstnumber=1]
+	X-Parse-Application-Id:<ID>
+	X-Parse-REST-API-Key:<Key>
+	Cache-Control:no-cache
+	Content-Type:application/json
+	\end{lstlisting} \\ \hline
+	Params & where={"objectId":"FpR7Ls8XcG"} \\ \hline
+	Result &\begin{lstlisting}[language=json,firstnumber=1]
+{
+	"results": [
+	{
+		"objectId": "FpR7Ls8XcG",
+		"location": {
+			"__type": "GeoPoint",
+			"latitude": 48.2670555,
+			"longitude": 11.677272999
+		},
+		"controlCenterRelation": {
+			"__type": "Pointer",
+			"className": "ControlCenter",
+			"objectId": " QSvlT095CP"
+		},
+		"lastname": "Maier",
+		"username": "maiman",
+		"firstname": "Manfred",
+		"zip": "01345",
+		"city": "Hamburg",
+		"country": "Deutschland",
+		"birthdate": {
+			"__type": "Date",
+			"iso": "1900-01-01T06:11:00.000Z"
+		},
+		"sound": "idonthaveacluewhatthisisfor",
+		"qualification": "3",
+		"profession": "2",
+		"code": 2,
+		"phoneNumber": 1234472357823405,
+		"phoneCode": 1234,
+		"activated": true,
+		"comments": "Naal ok zin los vahriin",
+		"lastBLSCourse": "2020-01-01T23:28:56.782Z",
+		"insuranceType": "Haftpflicht",
+		"state": "3",
+		"emailVerified": false,
+		"createdAt": "2020-06-21T21:14:14.995Z",
+		"updatedAt": "2020-06-21T21:14:14.995Z",
+		"ACL": {
+			"*": {
+			"read": true
+			},
+			"FpR7Ls8XcG": {
+			"read": true,
+			"write": true
+			}
+		}
+	}
+	]
+}
+	\end{lstlisting} \\ \hline
+\end{longtable}
+	
+	\section{Emergency}
+	\begin{tabular}{ |c|c| }
+		\hline
+		& Create User\\
+		\hline \hline
+		TYPE & POST \\ \hline
+		URL & https://<server>/parse/classes/Emergency \\ \hline
+		Header & \begin{lstlisting}[language=json,firstnumber=1]
+X-Parse-Application-Id:<ID>
+X-Parse-REST-API-Key:<Key>
+Cache-Control:no-cache
+Content-Type:application/json
+		\end{lstlisting} \\ \hline
+		Body & 
+		\begin{lstlisting}[language=json,firstnumber=1]
+{
+	"locationPoint": {
+		"__type": "GeoPoint",
+		"latitude": 48.2670555,
+		"longitude": 11.677272999
+	},
+	"controlCenterRelation": {
+		"__type": "Pointer",
+		"className": "ControlCenter",
+		"objectId": " QSvlT095CP"
+	},
+	"state": 0,
+	"keyword": " NOTF NA REA 103",
+	"objectName": "Cafe Neuhaus",
+	"streetName": "Musterstr",
+	"streetNumber": "5",
+	"zip": "01345",
+	"city": "Hamburg",
+	"country": "Deutschland",
+	"patientName": "Hans Mustermann",
+	"indicatorName": "Rainer Ersthelfer",
+	"emergencyNumber": 12345678,
+	"informationString": "Verletzte weibliche Person
+		 vor dem Cafe Neuhaus"
+}
+		\end{lstlisting} \\ \hline
+		Result & \begin{lstlisting}[language=json,firstnumber=1]
+{
+	"objectId": "Epm6ebgmqv",
+	"createdAt": "2020-06-21T20:12:35.748Z"
+}
+		\end{lstlisting} \\ \hline
+	\end{tabular}
+	\begin{tabular}{ |c|c| }
+		\hline
+		& Get Emergency\\
+		\hline \hline
+		TYPE & GET \\ \hline
+		URL & https://<server>/parse/classes/Emergency \\ \hline
+		Header & \begin{lstlisting}[language=json,firstnumber=1]
+		X-Parse-Application-Id:<ID>
+		X-Parse-REST-API-Key:<Key>
+		Cache-Control:no-cache
+		Content-Type:application/json
+		\end{lstlisting} \\ \hline
+		Params & where={"objectId":"Epm6ebgmqv"} \\ \hline
+		Result &\begin{lstlisting}[language=json,firstnumber=1]
+{
+	"results": [
+	{
+		"objectId": "Epm6ebgmqv",
+		"locationPoint": {
+			"__type": "GeoPoint",
+			"latitude": 48.2670555,
+			"longitude": 11.677272999
+		},
+		"controlCenterRelation": {
+			"__type": "Pointer",
+			"className": "ControlCenter",
+			"objectId": " QSvlT095CP"
+		},
+		"state": 0,
+		"keyword": " NOTF NA REA 103",
+		"objectName": "Cafe Neuhaus",
+		"streetName": "Musterstr",
+		"streetNumber": "5",
+		"zip": "01345",
+		"city": "Hamburg",
+		"country": "Deutschland",
+		"patientName": "Hans Mustermann",
+		"indicatorName": "Rainer Ersthelfer",
+		"emergencyNumber": 12345678,
+		"informationString": "Verletzte weibliche
+		 Person vor dem Cafe Neuhaus",
+		"createdAt": "2020-06-21T20:12:35.748Z",
+		"updatedAt": "2020-06-21T20:12:35.748Z"
+	}
+	]
+}
+		\end{lstlisting} \\ \hline
+	\end{tabular}
+	
+	
+\end{document}

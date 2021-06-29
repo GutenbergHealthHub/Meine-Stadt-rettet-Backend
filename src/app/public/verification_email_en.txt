@@ -1,0 +1,12 @@
+﻿Dear {{firstName}} {{lastName}},
+
+thank you for your registration in the First Responder App. Together we can establish a strong first responder network and help people with cardiac arrest much faster. 
+In order to be part of our network please verify your email address by clicking on the buttom below.
+
+{{link}}
+
+As soon as we have checked your registration we will unlock you for emergency missions and you will be part of one of the biggest first responder community!
+In case you don’t have a certificate of your qualification in reanimation, please apply for a next first-aid course.
+
+Best regards
+Your First Responder App Team

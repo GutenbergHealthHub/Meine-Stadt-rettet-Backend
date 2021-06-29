@@ -1,0 +1,23 @@
+# dependencies
+node_modules
+
+# build output
+dist
+
+# log output
+logs
+*.log
+npm-debug.log*
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# environment setup
+localhost.env
+production.env
