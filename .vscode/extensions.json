@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "steoates.autoimport",
+        "mike-co.import-sorter",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig",
+        "gruntfuggly.todo-tree"
+    ]
+}
