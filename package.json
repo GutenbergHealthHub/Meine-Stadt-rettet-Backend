@@ -52,7 +52,7 @@
         "npm": "^6.5.0",
         "parse": "^1.11.1",
         "parse-dashboard": "^1.2.0",
-        "parse-server": "^2.8.2",
+        "parse-server": "^4.5.0",
         "parse-server-mailgun": "^2.4.11",
         "parse-server-push-adapter": "^2.0.2",
         "rxjs": "^6.2.2",
