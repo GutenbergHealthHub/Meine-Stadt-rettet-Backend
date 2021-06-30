@@ -21,7 +21,6 @@ import { BaseModelService } from './base/base-modelservice';
 
 @Injectable()
 export class UserService extends BaseModelService<User> {
-
     constructor(errorService: ErrorService, parseService: ParseService) {
         super(errorService, parseService, User);
     }
@@ -33,12 +32,20 @@ export class UserService extends BaseModelService<User> {
             query.include('certificateFR');
             query.include('certificates');
             query.include('userContractBasic');
-            query.first().then(firstresponder => resolve(firstresponder), error => this.errorService.handleParseErrors(error));
+            query.first().then(
+                (firstresponder) => resolve(firstresponder),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
     // @ts-ignore (todo: rename)
-    public getByFilter(searchQuery?: string, pageInfo?: PageInfo, uncheckedOnly: Boolean = false, origin?: string): Promise<Array<User>> {
+    public getByFilter(
+        searchQuery?: string,
+        pageInfo?: PageInfo,
+        uncheckedOnly = false,
+        origin?: string,
+    ): Promise<Array<User>> {
         return new Promise<Array<User>>((resolve, reject) => {
             let query = new Parse.Query(User);
             if (uncheckedOnly) {
@@ -58,7 +65,10 @@ export class UserService extends BaseModelService<User> {
             query.include('certificates');
             query.include('userContractBasic');
             query.doesNotExist('authData.anonymous.id');
-            query.find().then(firstresponders => resolve(firstresponders), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (firstresponders) => resolve(firstresponders),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -76,7 +86,10 @@ export class UserService extends BaseModelService<User> {
         return new Promise<Array<User>>((resolve, reject) => {
             const query = new Parse.Query(User);
             query.limit(99999999999);
-            query.find().then(firstresponders => resolve(firstresponders), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (firstresponders) => resolve(firstresponders),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -85,7 +98,7 @@ export class UserService extends BaseModelService<User> {
             const query = new Parse.Query(User);
             query.equalTo('objectId', user.id);
             query.include('controlCenterRelation');
-            this.parseService.subscribe<User>(query).then(subscription => resolve(subscription));
+            this.parseService.subscribe<User>(query).then((subscription) => resolve(subscription));
         });
     }
 
@@ -94,7 +107,7 @@ export class UserService extends BaseModelService<User> {
             const query = new Parse.Query(User);
             query.equalTo('objectId', userId);
             query.include('controlCenterRelation');
-            this.parseService.subscribe<User>(query).then(subscription => resolve(subscription));
+            this.parseService.subscribe<User>(query).then((subscription) => resolve(subscription));
         });
     }
 
@@ -102,12 +115,11 @@ export class UserService extends BaseModelService<User> {
         return new Promise<Subscription<User>>((resolve, reject) => {
             const query = new Parse.Query(User);
             query.equalTo('username', username);
-            this.parseService.subscribe<User>(query).then(subscription => resolve(subscription));
+            this.parseService.subscribe<User>(query).then((subscription) => resolve(subscription));
         });
     }
 
     public limitQueryToUncheckedUsers(query: Parse.Query) {
-
         query.equalTo('activated', false);
         query.equalTo('emailVerified', true);
         query.exists('certificateFR');

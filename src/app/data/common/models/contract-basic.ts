@@ -86,8 +86,6 @@ export class ContractBasic extends BaseModel {
     public set title(value: string) {
         this._title = value;
     }
-
 }
 
 BaseModel.registerClass(ContractBasic, ContractBasic.PARSE_CLASSNAME);
-

@@ -20,17 +20,18 @@ import { Role, User } from '../models';
 
 @Injectable()
 export class RoleService {
-
-    constructor(private errorService: ErrorService, private parseService: ParseService) {
-    }
+    constructor(private errorService: ErrorService, private parseService: ParseService) {}
 
     public getUserRoles(user: User): Promise<Array<Role>> {
         return new Promise<Array<Role>>((resolve, reject) => {
             const query = new Parse.Query(Role);
             query.equalTo('users', Parse.User.current());
-            query.find().then(roles => {
-                this.addChildRoles(roles).then(allRoles => resolve(allRoles));
-            }, error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (roles) => {
+                    this.addChildRoles(roles).then((allRoles) => resolve(allRoles));
+                },
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -41,12 +42,15 @@ export class RoleService {
                 resolve(roleArray);
             } else {
                 roleArray.forEach((role) => {
-                    role.roles.query().find().then((roles) => {
-                        resultRoles = resultRoles.concat(roles as Array<Role>);
-                        this.addChildRoles(roles as Array<Role>).then((additionalRoles) => {
-                            resolve(resultRoles.concat(additionalRoles));
+                    role.roles
+                        .query()
+                        .find()
+                        .then((roles) => {
+                            resultRoles = resultRoles.concat(roles as Array<Role>);
+                            this.addChildRoles(roles as Array<Role>).then((additionalRoles) => {
+                                resolve(resultRoles.concat(additionalRoles));
+                            });
                         });
-                    });
                 });
             }
         });

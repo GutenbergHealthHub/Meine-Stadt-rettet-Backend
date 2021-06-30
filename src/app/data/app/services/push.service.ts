@@ -23,9 +23,16 @@ import { Localization } from '../../common/models/localization';
 export class PushService {
     private configurationService = ServiceManager.get(ConfigurationService);
 
-    public sendEmergencyPush(pushQuery: Parse.Query<Installation>, installation: Installation, sound: string, configuration: Configuration, emergencyState: EmergencyState, badge: number | string, silent: boolean) {
+    public sendEmergencyPush(
+        pushQuery: Parse.Query<Installation>,
+        installation: Installation,
+        sound: string,
+        configuration: Configuration,
+        emergencyState: EmergencyState,
+        badge: number | string,
+        silent: boolean,
+    ) {
         return new Promise((resolve, reject) => {
-
             const localization = new Localization(installation.localeIdentifier);
             const alert = localization.alert();
 
@@ -62,32 +69,34 @@ export class PushService {
 
             // DO NOT SEND detailed emergency information to users ONLY IDs.
             // The emergency information is retrieved by the App after the user has accepted the emergency.
-            Parse.Push.send({
-                where: pushQuery,
-                data: {
-                    aps: {
-                        'content-available': '1', // Optional
-                        'sound': {
-                            'critical': 1,
-                            'name': sound
-                        }
+            Parse.Push.send(
+                {
+                    where: pushQuery,
+                    data: {
+                        aps: {
+                            'content-available': '1', // Optional
+                            sound: {
+                                critical: 1,
+                                name: sound,
+                            },
+                        },
+                        alert: alert,
+                        emergencyStateId: emergencyState.id,
+                        emergencyId: emergencyState.emergencyRelation.id,
+                        badge: badge,
+                        createdAt: emergencyState.createdAt,
+                        config: {
+                            id: configuration.id, // possibly null
+                            distance: configuration.distance,
+                            emergencyTask: emergencyState.emergencyTask,
+                        },
                     },
-                    'alert': alert,
-                    'emergencyStateId': emergencyState.id,
-                    'emergencyId': emergencyState.emergencyRelation.id,
-                    'badge': badge,
-                    'createdAt': emergencyState.createdAt,
-                    'config': {
-                        'id': configuration.id, // possibly null
-                        'distance': configuration.distance,
-                        'emergencyTask': emergencyState.emergencyTask
-                    }
-                }
-            }, {
+                },
+                {
                     useMasterKey: true,
                     success: () => resolve(),
-                    error: (error) => reject(error)
-                }
+                    error: (error) => reject(error),
+                },
             );
         });
     }

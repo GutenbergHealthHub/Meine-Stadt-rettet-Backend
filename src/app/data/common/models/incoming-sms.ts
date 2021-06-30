@@ -89,15 +89,15 @@ export class IncomingSMSProcessingListEntryResult {
     public status: number;
     public message: string | null;
 
-    public static ok(): IncomingSMSProcessingListEntryResult  {
+    public static ok(): IncomingSMSProcessingListEntryResult {
         return new IncomingSMSProcessingListEntryResult(0);
     }
 
-    public static error(message: string): IncomingSMSProcessingListEntryResult  {
+    public static error(message: string): IncomingSMSProcessingListEntryResult {
         return new IncomingSMSProcessingListEntryResult(-1, message);
     }
 
-    public static errorWithStatus(status: number, message: string): IncomingSMSProcessingListEntryResult  {
+    public static errorWithStatus(status: number, message: string): IncomingSMSProcessingListEntryResult {
         return new IncomingSMSProcessingListEntryResult(status, message);
     }
 

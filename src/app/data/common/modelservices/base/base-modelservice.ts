@@ -19,14 +19,19 @@ import { PageInfo } from '../../models';
 
 export type FilterCallback = (query: Parse.Query, filterString: string) => any;
 export class BaseModelService<T extends Parse.Object> {
-
-    constructor(protected errorService: ErrorService, protected parseService: ParseService, protected modelConstructor: new () => T) {
-    }
+    constructor(
+        protected errorService: ErrorService,
+        protected parseService: ParseService,
+        protected modelConstructor: new () => T,
+    ) {}
 
     public get(includes?: [keyof T]) {
         return new Promise<T[]>((resolve, reject) => {
             const query = this.createQuery(includes);
-            query.find().then(objectList => resolve(objectList), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (objectList) => resolve(objectList),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -39,7 +44,10 @@ export class BaseModelService<T extends Parse.Object> {
             const query = this.createQuery(includes);
             query.equalTo(attribute, value);
             query.limit(99999999);
-            query.find().then(objectList => resolve(objectList), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (objectList) => resolve(objectList),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -47,7 +55,10 @@ export class BaseModelService<T extends Parse.Object> {
         return new Promise<T>((resolve, reject) => {
             const query = this.createQuery(includes);
             query.equalTo(attribute, value);
-            query.first().then(object => resolve(object), error => this.errorService.handleParseErrors(error));
+            query.first().then(
+                (object) => resolve(object),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -81,13 +92,17 @@ export class BaseModelService<T extends Parse.Object> {
         return query;
     }
 
-    protected applyPageInfo(query: Parse.Query<T>, pageInfo: PageInfo, filterCallback?: FilterCallback): Parse.Query<T> {
+    protected applyPageInfo(
+        query: Parse.Query<T>,
+        pageInfo: PageInfo,
+        filterCallback?: FilterCallback,
+    ): Parse.Query<T> {
         if (pageInfo.filterQuery && filterCallback) {
             query = this.applyFilter(query, pageInfo.filterQuery, filterCallback);
         }
 
         if (pageInfo) {
-            query.count().then((count) => pageInfo.totalCount = count);
+            query.count().then((count) => (pageInfo.totalCount = count));
             query.limit(pageInfo.rowLimit);
             query.skip(pageInfo.pageOffset * pageInfo.rowLimit);
             if (pageInfo.orderAsc) {

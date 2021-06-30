@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { environment } from "../../common-imports";
-import { Injectable } from "@angular/core";
-import { Parse } from "../../common-imports";
+import { environment } from '../../common-imports';
+import { Injectable } from '@angular/core';
+import { Parse } from '../../common-imports';
 export { Parse };
-import { Subject } from "rxjs/Subject";
-import { Observable } from "rxjs/Observable";
-import { ErrorService } from "./error.service";
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+import { ErrorService } from './error.service';
 
 interface ISubscriptionDescriptor {
     subjects: Map<number, Subject<INextState<Parse.BaseObject>>>;
@@ -39,7 +39,7 @@ export class Subscription<T extends Parse.BaseObject = Parse.BaseObject> {
         token: string,
         observable: Observable<INextState<T>>,
         state: Map<string, T>,
-        parseService: ParseService
+        parseService: ParseService,
     ) {
         this._token = token;
         this._observable = observable;
@@ -94,19 +94,12 @@ export class ParseService {
         if (!ParseService.isParseServer()) {
             if (environment.PARSE) {
                 // @ts-ignore
-                Parse.initialize(
-                    environment.PARSE.APP_ID,
-                    environment.PARSE.JS_KEY
-                );
+                Parse.initialize(environment.PARSE.APP_ID, environment.PARSE.JS_KEY);
                 // @ts-ignore
                 (Parse as any).serverURL = environment.PARSE.URL;
             } else {
                 // @ts-ignore
-                Parse.initialize(
-                    environment.PARSE_APP_ID,
-                    environment.PARSE_JS_KEY,
-                    environment.PARSE_MASTER_KEY
-                );
+                Parse.initialize(environment.PARSE_APP_ID, environment.PARSE_JS_KEY, environment.PARSE_MASTER_KEY);
                 // @ts-ignore
                 (Parse as any).Parse.serverURL = environment.PARSE_URL;
                 Parse.Cloud.useMasterKey();
@@ -115,15 +108,10 @@ export class ParseService {
     }
 
     public fileToParse(file: File, fileName?: string): Parse.File {
-        return new Parse.File(
-            fileName ? fileName : this.encodeFileName(file.name),
-            file
-        );
+        return new Parse.File(fileName ? fileName : this.encodeFileName(file.name), file);
     }
 
-    public subscribe<T extends Parse.BaseObject = Parse.BaseObject>(
-        query: Parse.Query
-    ) {
+    public subscribe<T extends Parse.BaseObject = Parse.BaseObject>(query: Parse.Query) {
         return new Promise<Subscription<T>>((resolve, reject) => {
             const queryId = this.getQueryId(query);
             const createSubscription = !this.subscriptions.has(queryId);
@@ -133,39 +121,28 @@ export class ParseService {
                     nextSubscriptionId: 0,
                     state: new Map(),
                     subscription: null,
-                    creationPromise: new Promise<Map<string, Parse.BaseObject>>(
-                        (resolveCreation, rejectCreation) => {
-                            this.createSubscription(queryId, query).then(
-                                (state) => {
-                                    resolveCreation(state);
-                                }
-                            );
-                        }
-                    ),
+                    creationPromise: new Promise<Map<string, Parse.BaseObject>>((resolveCreation, rejectCreation) => {
+                        this.createSubscription(queryId, query).then((state) => {
+                            resolveCreation(state);
+                        });
+                    }),
                 });
             }
 
             const subObj = this.subscriptions.get(queryId);
             const subscriptionId = ++subObj.nextSubscriptionId;
-            const subToken = queryId + ":" + subscriptionId;
+            const subToken = queryId + ':' + subscriptionId;
             const subject = new Subject<INextState<T>>();
             subObj.subjects.set(subscriptionId, subject);
 
             subObj.creationPromise.then((state) => {
-                resolve(
-                    new Subscription<T>(
-                        subToken,
-                        subject.asObservable(),
-                        state as Map<string, T>,
-                        this
-                    )
-                );
+                resolve(new Subscription<T>(subToken, subject.asObservable(), state as Map<string, T>, this));
             });
         });
     }
 
     public unsubscribe(subscription: Subscription) {
-        const tokenParts = subscription.token.split(":");
+        const tokenParts = subscription.token.split(':');
         const queryId = tokenParts[0];
         const subscriptionId = parseInt(tokenParts[1], 10);
 
@@ -188,37 +165,22 @@ export class ParseService {
         return Parse.Object.fromJSON(jsonObject, true);
     }
 
-    private createSubscription<T extends Parse.BaseObject = Parse.BaseObject>(
-        queryID,
-        query: Parse.Query
-    ) {
+    private createSubscription<T extends Parse.BaseObject = Parse.BaseObject>(queryID, query: Parse.Query) {
         return new Promise<Map<string, T>>((resolve, reject) => {
             const current = this;
             query.find({
                 success: (objectList) => {
                     if (current.subscriptions.has(queryID)) {
                         const subObj = current.subscriptions.get(queryID);
-                        for (
-                            let indexOfObjects = 0;
-                            indexOfObjects < objectList.length;
-                            ++indexOfObjects
-                        ) {
-                            subObj.state.set(
-                                objectList[indexOfObjects].id,
-                                objectList[indexOfObjects]
-                            );
+                        for (let indexOfObjects = 0; indexOfObjects < objectList.length; ++indexOfObjects) {
+                            subObj.state.set(objectList[indexOfObjects].id, objectList[indexOfObjects]);
                         }
                         subObj.subscription = (query as any).subscribe();
-                        ["create", "enter", "update"].forEach((command) => {
+                        ['create', 'enter', 'update'].forEach((command) => {
                             subObj.subscription.on(command, (object) => {
                                 const objectId = object.id;
-                                subObj.state.set(
-                                    objectId,
-                                    current.patchSubclass(object)
-                                );
-                                for (const subject of Array.from(
-                                    subObj.subjects.values()
-                                )) {
+                                subObj.state.set(objectId, current.patchSubclass(object));
+                                for (const subject of Array.from(subObj.subjects.values())) {
                                     subject.next({
                                         action: command,
                                         state: subObj.state,
@@ -228,13 +190,11 @@ export class ParseService {
                             });
                         });
 
-                        ["leave", "delete"].forEach((command) => {
+                        ['leave', 'delete'].forEach((command) => {
                             subObj.subscription.on(command, (object) => {
                                 const objectId = object.id;
                                 subObj.state.delete(objectId);
-                                for (const subject of Array.from(
-                                    subObj.subjects.values()
-                                )) {
+                                for (const subject of Array.from(subObj.subjects.values())) {
                                     subject.next({
                                         action: command,
                                         state: subObj.state,
@@ -244,7 +204,7 @@ export class ParseService {
                             });
                         });
 
-                        subObj.subscription.on("open", () => {
+                        subObj.subscription.on('open', () => {
                             resolve(subObj.state as Map<string, T>);
                         });
                     }
@@ -258,18 +218,11 @@ export class ParseService {
     }
 
     private getQueryId(query: Parse.Query): string {
-        return (
-            query.className +
-            "#" +
-            JSON.stringify(query.toJSON()).replace(/[:\"]/g, "")
-        );
+        return query.className + '#' + JSON.stringify(query.toJSON()).replace(/[:\"]/g, '');
     }
 
     private encodeFileName(fileName: string): string {
-        fileName = fileName.replace(
-            new RegExp(/((?![a-zA-Z0-9-_\.\ ]).)/gm),
-            ""
-        );
-        return fileName.replace(" ", "_");
+        fileName = fileName.replace(new RegExp(/((?![a-zA-Z0-9-_\.\ ]).)/gm), '');
+        return fileName.replace(' ', '_');
     }
 }

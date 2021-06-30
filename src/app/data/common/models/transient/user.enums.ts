@@ -1,4 +1,3 @@
-
 /*
  * Copyright [2020] Universitätsmedizin Mainz, Gutenberg Health Hub
  *
@@ -13,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Enums for provider qualification with corresponding id. e.g. 'Rettungssanitäter' maps to 3
  */
 
@@ -25,10 +24,10 @@ export enum UserQualificationEnum {
     doctor = 5,
     doctorWithLabelEmergencyMedicine = 6,
     trainingAsParamedic = 7,
-    ambulanceMan = 8
+    ambulanceMan = 8,
 }
 
-export let UserQualificationEnumText = new Map<UserQualificationEnum, string>()
+export const UserQualificationEnumText = new Map<UserQualificationEnum, string>()
     .set(UserQualificationEnum.BLSTraining, 'BLS-Schulung')
     .set(UserQualificationEnum.EHCourse, 'EH-Kurs')
     .set(UserQualificationEnum.paramedic, 'Rettungssanitäter')
@@ -36,7 +35,7 @@ export let UserQualificationEnumText = new Map<UserQualificationEnum, string>()
     .set(UserQualificationEnum.doctor, 'Arzt')
     .set(UserQualificationEnum.doctorWithLabelEmergencyMedicine, 'Arzt mit Zusatzbezeichnung Notfallmedizin')
     .set(UserQualificationEnum.trainingAsParamedic, 'Sanitätsausbildung')
-    .set(UserQualificationEnum.ambulanceMan, 'Rettungshelfer')
+    .set(UserQualificationEnum.ambulanceMan, 'Rettungshelfer');
 
 export enum UserProfessionEnum {
     elderCare = 1,
@@ -60,10 +59,10 @@ export enum UserProfessionEnum {
     medic = 19,
     other = 20,
     otherWithMedicalBackground = 21,
-    THW = 22
+    THW = 22,
 }
 
-export let UserProfessionEnumText = new Map<UserProfessionEnum, string>()
+export const UserProfessionEnumText = new Map<UserProfessionEnum, string>()
     .set(UserProfessionEnum.elderCare, 'Altenpflege')
     .set(UserProfessionEnum.doctor, 'Arzt')
     .set(UserProfessionEnum.doctorWithoutTechnicalKnowledge, 'Arzt (ohne Fachkunde/RD)')
@@ -86,4 +85,3 @@ export let UserProfessionEnumText = new Map<UserProfessionEnum, string>()
     .set(UserProfessionEnum.other, 'Sonstige')
     .set(UserProfessionEnum.otherWithMedicalBackground, 'Sonstige mit medizinischem Hintergrund')
     .set(UserProfessionEnum.THW, 'THW');
-

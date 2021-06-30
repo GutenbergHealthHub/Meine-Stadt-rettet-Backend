@@ -30,7 +30,7 @@ export enum EmergencyStateEnum {
     aborted = 5,
     finished = 6,
     calledBack = 7,
-    contacted = 8
+    contacted = 8,
 }
 
 export enum ProtocolStateEnum {
@@ -67,22 +67,38 @@ export class EmergencyState extends BaseModel {
 
     public cancel(): Promise<number> {
         return new Promise<number>((resolve, reject) => {
-            Parse.Cloud.run('cancelFirstResponder', { emergencyStateId: this.id }).then(result => resolve(result), error => reject(error));
+            Parse.Cloud.run('cancelFirstResponder', { emergencyStateId: this.id }).then(
+                (result) => resolve(result),
+                (error) => reject(error),
+            );
         });
     }
 
     public pushMessage(title: string, message: string): Promise<number> {
         return new Promise<number>((resolve, reject) => {
-            Parse.Cloud.run('pushToFirstresponder', { installationId: this.installationRelation.id, alert: title, message: message, state: 2 }).then(result => resolve(result), error => reject(error));
+            Parse.Cloud.run('pushToFirstresponder', {
+                installationId: this.installationRelation.id,
+                alert: title,
+                message: message,
+                state: 2,
+            }).then(
+                (result) => resolve(result),
+                (error) => reject(error),
+            );
         });
     }
 
     public get protocolState(): ProtocolStateEnum {
-        if ((this.protocolRelation === undefined || this.protocolRelation.done !== true) && this.state !== EmergencyStateEnum.initial && this.state !== EmergencyStateEnum.ready && this.state !== EmergencyStateEnum.received) {
+        if (
+            (this.protocolRelation === undefined || this.protocolRelation.done !== true) &&
+            this.state !== EmergencyStateEnum.initial &&
+            this.state !== EmergencyStateEnum.ready &&
+            this.state !== EmergencyStateEnum.received
+        ) {
             return ProtocolStateEnum.inProgress;
         } else {
             if (this.protocolRelation !== undefined) {
-                return (this.protocolRelation.cancelComment) ? ProtocolStateEnum.cancelled : ProtocolStateEnum.accepted;
+                return this.protocolRelation.cancelComment ? ProtocolStateEnum.cancelled : ProtocolStateEnum.accepted;
             } else {
                 return ProtocolStateEnum.none;
             }

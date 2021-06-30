@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {BaseModelService} from '../modelservices/base/base-modelservice';
-import {ParseService} from './parse.service';
-import {ErrorService} from './error.service';
+import { BaseModelService } from '../modelservices/base/base-modelservice';
+import { ParseService } from './parse.service';
+import { ErrorService } from './error.service';
 
 export class ServiceManager {
     private static objectMap = ServiceManager.init();

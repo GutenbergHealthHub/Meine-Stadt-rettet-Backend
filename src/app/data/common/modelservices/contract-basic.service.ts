@@ -20,9 +20,7 @@ import { ContractBasic } from '../models';
 
 @Injectable()
 export class ContractBasicService {
-
-    constructor(private errorService: ErrorService, private parseService: ParseService) {
-    }
+    constructor(private errorService: ErrorService, private parseService: ParseService) {}
 
     public getCurrent(): Promise<ContractBasic> {
         return new Promise<ContractBasic>((resolve, reject) => {
@@ -30,7 +28,10 @@ export class ContractBasicService {
             query.equalTo('title', 'Basisvereinbarung');
             query.greaterThan('validUntil', new Date());
             query.lessThan('validFrom', new Date());
-            query.first().then(contractBasic => resolve(contractBasic), error => this.errorService.handleParseErrors(error));
+            query.first().then(
+                (contractBasic) => resolve(contractBasic),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 }

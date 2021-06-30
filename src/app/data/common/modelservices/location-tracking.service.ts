@@ -21,7 +21,6 @@ import { BaseModelService } from './base/base-modelservice';
 
 @Injectable()
 export class LocationTrackingService extends BaseModelService<LocationTracking> {
-
     constructor(protected errorService: ErrorService, protected parseService: ParseService) {
         super(errorService, parseService, LocationTracking);
     }
@@ -31,7 +30,7 @@ export class LocationTrackingService extends BaseModelService<LocationTracking> 
             const query = new Parse.Query(LocationTracking);
             query.equalTo('emergencyStateRelation', emergencyState);
             query.descending('createdAt');
-            this.parseService.subscribe<LocationTracking>(query).then(subscription => resolve(subscription));
+            this.parseService.subscribe<LocationTracking>(query).then((subscription) => resolve(subscription));
         });
     }
 }

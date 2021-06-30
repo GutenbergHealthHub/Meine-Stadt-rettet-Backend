@@ -21,29 +21,33 @@ import { AlertingRegion, ControlCenter } from '../models';
 
 @Injectable()
 export class AlertingRegionService {
+    constructor(private errorService: ErrorService, private parseService: ParseService) {}
 
-    constructor(private errorService: ErrorService, private parseService: ParseService) {
-    }
-
-    public getByControlCenter(controlCenter: ControlCenter, activatedOnly: boolean = false): Promise<Array<AlertingRegion>> {
+    public getByControlCenter(controlCenter: ControlCenter, activatedOnly = false): Promise<Array<AlertingRegion>> {
         return new Promise<Array<AlertingRegion>>((resolve, reject) => {
             const query = new Parse.Query(AlertingRegion);
             query.equalTo('controlCenterRelation', controlCenter);
             if (activatedOnly) {
                 query.equalTo('activated', true);
             }
-            query.find().then(regions => resolve(regions), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (regions) => resolve(regions),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
-    public getById(id: String, activatedOnly: boolean = false): Promise<AlertingRegion> {
+    public getById(id: string, activatedOnly = false): Promise<AlertingRegion> {
         return new Promise<AlertingRegion>((resolve, reject) => {
             const query = new Parse.Query(AlertingRegion);
             query.equalTo('objectId', id);
             if (activatedOnly) {
                 query.equalTo('activated', true);
             }
-            query.first().then(region => resolve(region), error => this.errorService.handleParseErrors(error));
+            query.first().then(
+                (region) => resolve(region),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 }

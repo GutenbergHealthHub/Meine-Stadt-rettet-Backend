@@ -49,11 +49,11 @@ export class BaseModel extends Parse.Object {
     }
 
     public getAsPointer(): IPointer {
-        return { __type: 'Pointer', className: this.className, 'objectId': this.id };
+        return { __type: 'Pointer', className: this.className, objectId: this.id };
     }
 
     protected initArray(obj: Array<any>) {
-        return new Array();
+        return [];
     }
 
     private _setExisted(isExisted: boolean) {

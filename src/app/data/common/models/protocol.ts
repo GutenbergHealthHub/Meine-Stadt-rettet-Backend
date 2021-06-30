@@ -15,8 +15,34 @@
  */
 
 import { BaseModel, Parse } from './base';
-import { ProtocolAgeCategoryEnum, ProtocolSexEnum, ProtocolReanimationEnum, ProtocolStartLocationEnum, ProtocolReactionEnum, ProtocolStartRespirationEnum, ProtocolStartDiagnoseEnum, ProtocolStartOrientationEnum, ProtocolMeasureExecutorEnum, ProtocolMeasureDefiShockEnum, ProtocolProducerDefiEnum, ProtocolEndRespirationEnum, ProtocolAgeCategoryEnumText } from './transient';
-import { ProtocolSexEnumText, ProtocolReanimationEnumText, ProtocolStartLocationEnumText, ProtocolReactionEnumText, ProtocolStartRespirationEnumText, ProtocolStartDiagnoseEnumText, ProtocolStartOrientationEnumText, ProtocolMeasureExecutorEnumText, ProtocolMeasureDefiShockEnumText, ProtocolProducerDefiEnumText, ProtocolEndRespirationEnumText } from './transient';
+import {
+    ProtocolAgeCategoryEnum,
+    ProtocolSexEnum,
+    ProtocolReanimationEnum,
+    ProtocolStartLocationEnum,
+    ProtocolReactionEnum,
+    ProtocolStartRespirationEnum,
+    ProtocolStartDiagnoseEnum,
+    ProtocolStartOrientationEnum,
+    ProtocolMeasureExecutorEnum,
+    ProtocolMeasureDefiShockEnum,
+    ProtocolProducerDefiEnum,
+    ProtocolEndRespirationEnum,
+    ProtocolAgeCategoryEnumText,
+} from './transient';
+import {
+    ProtocolSexEnumText,
+    ProtocolReanimationEnumText,
+    ProtocolStartLocationEnumText,
+    ProtocolReactionEnumText,
+    ProtocolStartRespirationEnumText,
+    ProtocolStartDiagnoseEnumText,
+    ProtocolStartOrientationEnumText,
+    ProtocolMeasureExecutorEnumText,
+    ProtocolMeasureDefiShockEnumText,
+    ProtocolProducerDefiEnumText,
+    ProtocolEndRespirationEnumText,
+} from './transient';
 
 export class Protocol extends BaseModel {
     public static PARSE_CLASSNAME = 'Protocol';
@@ -58,7 +84,6 @@ export class Protocol extends BaseModel {
     constructor() {
         super(Protocol.PARSE_CLASSNAME);
     }
-
 
     /**
      * Getter startLaterRelAmbulance
@@ -120,7 +145,6 @@ export class Protocol extends BaseModel {
         return ProtocolReanimationEnumText.get(this.reanimationValue);
     }
 
-
     /**
      * Getter startLocationValueN
      * @return {ProtocolStartLocationEnum}
@@ -158,7 +182,6 @@ export class Protocol extends BaseModel {
         }
         return texts.join(', ');
     }
-
 
     /**
      * Getter startRespirationValue
@@ -667,7 +690,6 @@ export class Protocol extends BaseModel {
     public set callOthers(value: string) {
         this._callOthers = value;
     }
-
 }
 
 BaseModel.registerClass(Protocol, Protocol.PARSE_CLASSNAME);

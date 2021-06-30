@@ -16,7 +16,7 @@
 
 export enum LOCALIZATION {
     ENGLISH = 'en-EN',
-    GERMAN = 'de-DE'
+    GERMAN = 'de-DE',
 }
 
 export class Localization {
@@ -113,5 +113,4 @@ export class Localization {
                 return 'Weekly Test Alarm';
         }
     }
-
 }

@@ -20,15 +20,16 @@ import { Certificate } from '../models';
 
 @Injectable()
 export class CertificateService {
-
-    constructor(private errorService: ErrorService, private parseService: ParseService) {
-    }
+    constructor(private errorService: ErrorService, private parseService: ParseService) {}
 
     public getMain(): Promise<Certificate[]> {
         return new Promise<Certificate[]>((resolve, reject) => {
             const query = new Parse.Query(Certificate);
             query.equalTo('type', 1);
-            query.find().then(certificates => resolve(certificates), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (certificates) => resolve(certificates),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -36,7 +37,10 @@ export class CertificateService {
         return new Promise<Certificate[]>((resolve, reject) => {
             const query = new Parse.Query(Certificate);
             query.equalTo('type', 0);
-            query.find().then(certificates => resolve(certificates), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (certificates) => resolve(certificates),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -44,7 +48,10 @@ export class CertificateService {
         return new Promise<Certificate>((resolve, reject) => {
             const query = new Parse.Query(Certificate);
             query.equalTo('objectId', id);
-            query.first().then(certificate => resolve(certificate), error => this.errorService.handleParseErrors(error));
+            query.first().then(
+                (certificate) => resolve(certificate),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 }

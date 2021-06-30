@@ -18,7 +18,7 @@ import { BaseModel, IPointer } from './base';
 
 export enum CertificateStateEnum {
     initial = 1,
-    approved = 2
+    approved = 2,
 }
 
 export enum CertificateTypeEnum {

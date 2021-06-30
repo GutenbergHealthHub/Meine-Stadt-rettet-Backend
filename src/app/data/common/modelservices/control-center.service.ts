@@ -20,8 +20,7 @@ import { Role, User, ControlCenter } from '../models';
 import { BaseModelService } from './base/base-modelservice';
 
 @Injectable()
-export class ControlCenterService extends BaseModelService<ControlCenter>  {
-
+export class ControlCenterService extends BaseModelService<ControlCenter> {
     constructor(protected errorService: ErrorService, protected parseService: ParseService) {
         super(errorService, parseService, ControlCenter);
     }

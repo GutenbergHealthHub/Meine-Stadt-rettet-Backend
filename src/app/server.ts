@@ -23,13 +23,11 @@ import app from './app';
 import { ParseAPI } from './apis';
 import { resolve } from 'path';
 
-
 // declare var Parse;
 /**
  * Error Handler. Provides full stack - remove for production
  */
 app.use(errorHandler());
-
 
 /**
  * Start Express server
@@ -55,6 +53,3 @@ if (process.env.PROD === 'true') {
         app.emit('HTTP_SERVER_LISTENS', server);
     });
 }
-
-
-

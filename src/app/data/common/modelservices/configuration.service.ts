@@ -20,15 +20,16 @@ import { Configuration, ControlCenter, Emergency, AlertingRegion } from '../mode
 
 @Injectable()
 export class ConfigurationService {
-
-    constructor(private errorService: ErrorService, private parseService: ParseService) {
-    }
+    constructor(private errorService: ErrorService, private parseService: ParseService) {}
 
     public getByControlCenter(controlCenter: ControlCenter): Promise<Configuration> {
         return new Promise<Configuration>((resolve, reject) => {
             const query = new Parse.Query(Configuration);
             query.equalTo('controlCenterRelation', controlCenter);
-            query.first().then(configuration => resolve(configuration), error => this.errorService.handleParseErrors(error));
+            query.first().then(
+                (configuration) => resolve(configuration),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -41,8 +42,7 @@ export class ConfigurationService {
 
     public getByEmergency(emergency: Emergency): Promise<Configuration> {
         return new Promise<Configuration>((resolve, reject) => {
-
-            this.getByControlCenter(emergency.controlCenterRelation).then(configuration => {
+            this.getByControlCenter(emergency.controlCenterRelation).then((configuration) => {
                 if (!configuration) {
                     configuration = this.getDefault(emergency.controlCenterRelation);
                 }
@@ -50,15 +50,18 @@ export class ConfigurationService {
                 const query = new Parse.Query(AlertingRegion);
                 query.equalTo('controlCenterRelation', emergency.controlCenterRelation);
                 query.equalTo('activated', true);
-                query.find().then(regions => {
-                    for (const region of regions) {
-                        const distance = region.location.kilometersTo(emergency.locationPoint) * 1000;
-                        if (distance <= region.circleRadius && region.alertingRadius < configuration.distance) {
-                            configuration.distance = region.alertingRadius;
+                query.find().then(
+                    (regions) => {
+                        for (const region of regions) {
+                            const distance = region.location.kilometersTo(emergency.locationPoint) * 1000;
+                            if (distance <= region.circleRadius && region.alertingRadius < configuration.distance) {
+                                configuration.distance = region.alertingRadius;
+                            }
                         }
-                    }
-                    resolve(configuration);
-                }, error => this.errorService.handleParseErrors(error));
+                        resolve(configuration);
+                    },
+                    (error) => this.errorService.handleParseErrors(error),
+                );
             });
         });
     }

@@ -20,11 +20,10 @@ import { ParseAPI } from './apis';
 import path from 'path';
 import bodyParser from 'body-parser';
 
-
 const databaseUri = process.env.DATABASE_URI || process.env.MONGOLAB_URI;
 
 if (!databaseUri) {
-  console.log('DATABASE_URI not specified, falling back to localhost.');
+    console.log('DATABASE_URI not specified, falling back to localhost.');
 }
 
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
@@ -32,7 +31,6 @@ if (!databaseUri) {
 // javascriptKey, restAPIKey, dotNetKey, clientKey
 
 const app = express();
-
 
 // Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -47,14 +45,14 @@ app.use(parseMount, new ParseAPI(app).getHandler());
 
 // Parse Server plays nicely with the rest of your web routes
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/public/online.html'));
-  //res.status(200).send('Make sure to star the parse-server repo on GitHub!');
+    res.sendFile(path.join(__dirname, '/public/online.html'));
+    //res.status(200).send('Make sure to star the parse-server repo on GitHub!');
 });
 
 // There will be a test page available on the /test path of your server url
 // Remove this before launching your app
 app.get('/test', (req, res) => {
-  res.sendFile(path.join(__dirname, '/public/test.html'));
+    res.sendFile(path.join(__dirname, '/public/test.html'));
 });
 
 export default app;

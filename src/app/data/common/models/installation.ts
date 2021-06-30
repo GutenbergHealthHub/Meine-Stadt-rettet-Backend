@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { BaseModel, Parse } from "./base";
-import { User } from "./user";
-import { ParseService } from "../services";
+import { BaseModel, Parse } from './base';
+import { User } from './user';
+import { ParseService } from '../services';
 
 export enum InstallationDeviceEnum {
-    ios = "ios",
-    android = "android",
+    ios = 'ios',
+    android = 'android',
 }
 
 export class Installation extends Parse.Installation {
-    public static PARSE_CLASSNAME = "_Installation";
+    public static PARSE_CLASSNAME = '_Installation';
 
     private _parseVersion: string;
     private _userRelation: User;
@@ -88,7 +88,7 @@ export class Installation extends Parse.Installation {
 
     public save(): Parse.Promise<this> {
         for (const attrKey of Object.keys(this)) {
-            if (attrKey[0] === "_" && attrKey !== "_objCount") {
+            if (attrKey[0] === '_' && attrKey !== '_objCount') {
                 this.set(attrKey.substr(1), this[attrKey]);
             }
         }
@@ -110,11 +110,7 @@ export class Installation extends Parse.Installation {
     private _setExisted(isExisted: boolean) {
         if (!this.existed()) {
             for (const attrKey of Object.keys(this)) {
-                if (
-                    attrKey[0] === "_" &&
-                    attrKey !== "_objCount" &&
-                    attrKey !== "_id"
-                ) {
+                if (attrKey[0] === '_' && attrKey !== '_objCount' && attrKey !== '_id') {
                     delete this[attrKey];
                 }
             }
@@ -122,10 +118,10 @@ export class Installation extends Parse.Installation {
 
         for (const attrKey of Object.keys(this.attributes)) {
             if (this[attrKey] === undefined) {
-                this["_" + attrKey] = this.get(attrKey);
+                this['_' + attrKey] = this.get(attrKey);
             }
         }
-        super["_setExisted"](isExisted);
+        super['_setExisted'](isExisted);
     }
 }
 

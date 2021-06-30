@@ -29,7 +29,10 @@ export class ErrorService extends EventEmitter {
         console.warn(error);
         switch (error.code) {
             case 100:
-                this.emit('exception', 'The server is currently unreachable. This might be caused by missing internet connectivity or server maintenance.');
+                this.emit(
+                    'exception',
+                    'The server is currently unreachable. This might be caused by missing internet connectivity or server maintenance.',
+                );
                 break;
             case 209:
                 Parse.User.logOut();

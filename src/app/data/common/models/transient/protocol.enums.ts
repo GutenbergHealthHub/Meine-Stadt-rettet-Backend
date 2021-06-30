@@ -1,4 +1,3 @@
-
 /*
  * Copyright [2020] Universitätsmedizin Mainz, Gutenberg Health Hub
  *
@@ -13,8 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Here are enums for Protocol decisions listed. e.g. Patient-Sex categories, reasons for not performing cpr 
+ *
+ * Here are enums for Protocol decisions listed. e.g. Patient-Sex categories, reasons for not performing cpr
  */
 
 export enum ProtocolAgeCategoryEnum {
@@ -23,17 +22,17 @@ export enum ProtocolAgeCategoryEnum {
     joungerThenOneYear = 3,
 }
 
-export let ProtocolAgeCategoryEnumText = new Map<ProtocolAgeCategoryEnum, string>()
+export const ProtocolAgeCategoryEnumText = new Map<ProtocolAgeCategoryEnum, string>()
     .set(ProtocolAgeCategoryEnum.oneToSevenDays, '1-7 Tage')
     .set(ProtocolAgeCategoryEnum.eightToTwentyeightDays, '8-28 Tage')
     .set(ProtocolAgeCategoryEnum.joungerThenOneYear, 'jünger als 1 Jahr');
 
 export enum ProtocolSexEnum {
     male = 'm',
-    female = 'w'
+    female = 'w',
 }
 
-export let ProtocolSexEnumText = new Map<ProtocolSexEnum, string>()
+export const ProtocolSexEnumText = new Map<ProtocolSexEnum, string>()
     .set(ProtocolSexEnum.male, 'männlich')
     .set(ProtocolSexEnum.female, 'weiblich');
 
@@ -41,13 +40,16 @@ export enum ProtocolReanimationEnum {
     performed = 1,
     notPerformedPatientNotReachable = 2,
     notPerformedPhysicalCondition = 3,
-    notPerformedOtherFactors = 4
+    notPerformedOtherFactors = 4,
 }
 
-export let ProtocolReanimationEnumText = new Map<ProtocolReanimationEnum, string>()
+export const ProtocolReanimationEnumText = new Map<ProtocolReanimationEnum, string>()
     .set(ProtocolReanimationEnum.performed, 'Reanimation durchgeführt')
     .set(ProtocolReanimationEnum.notPerformedPatientNotReachable, 'nicht durchgeführt, da Patient nicht erreichbar')
-    .set(ProtocolReanimationEnum.notPerformedPhysicalCondition, 'nicht durchgeführt, da Reanimation körperlich nicht leistbar')
+    .set(
+        ProtocolReanimationEnum.notPerformedPhysicalCondition,
+        'nicht durchgeführt, da Reanimation körperlich nicht leistbar',
+    )
     .set(ProtocolReanimationEnum.notPerformedOtherFactors, 'Reanimation nicht durchgeführt, andere Faktoren');
 
 export enum ProtocolStartLocationEnum {
@@ -64,10 +66,10 @@ export enum ProtocolStartLocationEnum {
     educationalInstitution = 10,
     sportsClub = 11,
     birthHouse = 12,
-    unknown = 99
+    unknown = 99,
 }
 
-export let ProtocolStartLocationEnumText = new Map<ProtocolStartLocationEnum, string>()
+export const ProtocolStartLocationEnumText = new Map<ProtocolStartLocationEnum, string>()
     .set(ProtocolStartLocationEnum.notDocumented, 'nicht dokumentiert')
     .set(ProtocolStartLocationEnum.apartment, 'Wohnung')
     .set(ProtocolStartLocationEnum.nursingHome, 'Altenheim')
@@ -91,10 +93,10 @@ export enum ProtocolReactionEnum {
     respondsToPain = 4,
     unconscious = 5,
     drowsy = 6,
-    notAssessable = 99
+    notAssessable = 99,
 }
 
-export let ProtocolReactionEnumText = new Map<ProtocolReactionEnum, string>()
+export const ProtocolReactionEnumText = new Map<ProtocolReactionEnum, string>()
     .set(ProtocolReactionEnum.notDocumented, 'nicht dokumentiert')
     .set(ProtocolReactionEnum.narcotized, 'analgosediert / Narkose')
     .set(ProtocolReactionEnum.awake, 'wach')
@@ -110,10 +112,10 @@ export enum ProtocolStartRespirationEnum {
     apnoe = 9,
     respiration = 10,
     normal = 11,
-    notAssessable = 99
+    notAssessable = 99,
 }
 
-export let ProtocolStartRespirationEnumText = new Map<ProtocolStartRespirationEnum, string>()
+export const ProtocolStartRespirationEnumText = new Map<ProtocolStartRespirationEnum, string>()
     .set(ProtocolStartRespirationEnum.noFindingDocumented, 'kein Befund dokumentiert')
     .set(ProtocolStartRespirationEnum.gasping, 'Schnappatmung')
     .set(ProtocolStartRespirationEnum.apnoe, 'Apnoe')
@@ -134,10 +136,10 @@ export enum ProtocolStartDiagnoseEnum {
     metabolic = 10,
     others = 11,
     sepsis = 12,
-    unknown = 99
+    unknown = 99,
 }
 
-export let ProtocolStartDiagnoseEnumText = new Map<ProtocolStartDiagnoseEnum, string>()
+export const ProtocolStartDiagnoseEnumText = new Map<ProtocolStartDiagnoseEnum, string>()
     .set(ProtocolStartDiagnoseEnum.cardial, 'kardial')
     .set(ProtocolStartDiagnoseEnum.trauma, 'Trauma')
     .set(ProtocolStartDiagnoseEnum.drowning, 'Ertrinken')
@@ -156,10 +158,10 @@ export enum ProtocolStartOrientationEnum {
     normal = 1,
     limitedOriented = 2,
     disoriented = 3,
-    unknown = 99
+    unknown = 99,
 }
 
-export let ProtocolStartOrientationEnumText = new Map<ProtocolStartOrientationEnum, string>()
+export const ProtocolStartOrientationEnumText = new Map<ProtocolStartOrientationEnum, string>()
     .set(ProtocolStartOrientationEnum.normal, 'Normal')
     .set(ProtocolStartOrientationEnum.limitedOriented, 'Eingeschränkt')
     .set(ProtocolStartOrientationEnum.disoriented, 'Desorientiert')
@@ -169,10 +171,10 @@ export enum ProtocolMeasureExecutorEnum {
     accidentallyPresentWittness = 1,
     appFirstResponder = 2,
     notObserved = 3,
-    notSpecifiedOrPatientNotReanimated = 98
+    notSpecifiedOrPatientNotReanimated = 98,
 }
 
-export let ProtocolMeasureExecutorEnumText = new Map<ProtocolMeasureExecutorEnum, string>()
+export const ProtocolMeasureExecutorEnumText = new Map<ProtocolMeasureExecutorEnum, string>()
     .set(ProtocolMeasureExecutorEnum.accidentallyPresentWittness, 'zufällig anwesender Zeuge')
     .set(ProtocolMeasureExecutorEnum.appFirstResponder, 'App-Helfer')
     .set(ProtocolMeasureExecutorEnum.notObserved, 'nicht beobachtet')
@@ -185,10 +187,10 @@ export enum ProtocolMeasureDefiShockEnum {
     fourToSixShocks = 3,
     sevenToNineShocks = 4,
     moreThanNineShocks = 5,
-    unknown = 99
+    unknown = 99,
 }
 
-export let ProtocolMeasureDefiShockEnumText = new Map<ProtocolMeasureDefiShockEnum, string>()
+export const ProtocolMeasureDefiShockEnumText = new Map<ProtocolMeasureDefiShockEnum, string>()
     .set(ProtocolMeasureDefiShockEnum.notSpecified, 'keine Angaben')
     .set(ProtocolMeasureDefiShockEnum.oneShock, '1 Schock')
     .set(ProtocolMeasureDefiShockEnum.twoToThreeShocks, '2-3 Schocks')
@@ -211,10 +213,10 @@ export enum ProtocolProducerDefiEnum {
     welchAllyn = 10,
     ge = 11,
     defibtech = 12,
-    unknown = 99
+    unknown = 99,
 }
 
-export let ProtocolProducerDefiEnumText = new Map<ProtocolProducerDefiEnum, string>()
+export const ProtocolProducerDefiEnumText = new Map<ProtocolProducerDefiEnum, string>()
     .set(ProtocolProducerDefiEnum.notSpecified, 'keine Angaben')
     .set(ProtocolProducerDefiEnum.laerdal_phillips_hp, 'Laerdal/Phillips/HP')
     .set(ProtocolProducerDefiEnum.schiller_bruker, 'Schiller/Bruker')
@@ -233,10 +235,10 @@ export let ProtocolProducerDefiEnumText = new Map<ProtocolProducerDefiEnum, stri
 export enum ProtocolEndRespirationEnum {
     runningReanimation = 1,
     normalBreathing = 2,
-    patientIsConscious = 3
+    patientIsConscious = 3,
 }
 
-export let ProtocolEndRespirationEnumText = new Map<ProtocolEndRespirationEnum, string>()
+export const ProtocolEndRespirationEnumText = new Map<ProtocolEndRespirationEnum, string>()
     .set(ProtocolEndRespirationEnum.runningReanimation, 'laufende Reanimation')
     .set(ProtocolEndRespirationEnum.normalBreathing, 'Atmung vorhanden')
     .set(ProtocolEndRespirationEnum.patientIsConscious, 'Patient bei Bewußtsein');

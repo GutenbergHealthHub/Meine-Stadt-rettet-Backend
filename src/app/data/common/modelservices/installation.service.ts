@@ -24,8 +24,7 @@ import { Configuration } from '../models';
 import { ServiceManager } from '../services/service-manager';
 
 @Injectable()
-export class InstallationService extends BaseModelService<Installation>  {
-
+export class InstallationService extends BaseModelService<Installation> {
     private userService = ServiceManager.get(UserService);
 
     constructor(protected errorService: ErrorService, protected parseService: ParseService) {
@@ -38,7 +37,10 @@ export class InstallationService extends BaseModelService<Installation>  {
             query.equalTo('userRelation', user);
             query.include('userRelation');
             query.descending('createdAt');
-            query.first().then(installation => resolve(installation), error => this.errorService.handleParseErrors(error));
+            query.first().then(
+                (installation) => resolve(installation),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -48,19 +50,23 @@ export class InstallationService extends BaseModelService<Installation>  {
             query.include('userRelation');
             query.descending('createdAt');
             query.limit(99999999);
-            query.find().then(installationList => resolve(installationList), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (installationList) => resolve(installationList),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
     public getAllInRangeByConfig(location: Parse.GeoPoint, config: Configuration): Promise<Array<Installation>> {
         return new Promise<Array<Installation>>((resolve, reject) => {
-            const userQuery = this.userService.createQuery()
+            const userQuery = this.userService
+                .createQuery()
                 .equalTo('emailVerified', true)
                 .equalTo('activated', true)
                 .lessThan('pausedUntil', new Date())
                 .notEqualTo('dutyOff', true)
                 .notContainedIn('dutyDays', [new Date().getDay()])
-                .withinKilometers('location', location, (config.distance / 1000))
+                .withinKilometers('location', location, config.distance / 1000)
                 .limit(9999999999);
 
             if (config.constraints) {
@@ -80,7 +86,10 @@ export class InstallationService extends BaseModelService<Installation>  {
                 .include('userRelation')
                 .limit(999999999);
 
-            query.find().then(installationList => resolve(installationList), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (installationList) => resolve(installationList),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 }

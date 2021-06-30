@@ -83,4 +83,3 @@ export class LocationTracking extends BaseModel {
 }
 
 BaseModel.registerClass(LocationTracking, LocationTracking.PARSE_CLASSNAME);
-

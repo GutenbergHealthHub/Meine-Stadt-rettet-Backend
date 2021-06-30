@@ -54,4 +54,3 @@ export class UserContractBasic extends BaseModel {
 }
 
 BaseModel.registerClass(UserContractBasic, UserContractBasic.PARSE_CLASSNAME);
-

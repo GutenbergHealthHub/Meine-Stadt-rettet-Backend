@@ -20,7 +20,6 @@ import { BaseAPI } from '../base/base.api';
 import { resolve } from 'path';
 
 export class ParseAPI extends BaseAPI {
-
     constructor(app: Express) {
         super(app);
 
@@ -41,11 +40,11 @@ export class ParseAPI extends BaseAPI {
             restAPIKey: process.env.REST_API_KEY,
             javascriptKey: process.env.JAVASCRIPT_KEY,
             clientKey: process.env.CLIENT_KEY,
-            serverURL: process.env.SERVER_URL + process.env.PARSE_MOUNT || 'http://localhost:1337/parse',  // Don't forget to change to https if needed
+            serverURL: process.env.SERVER_URL + process.env.PARSE_MOUNT || 'http://localhost:1337/parse', // Don't forget to change to https if needed
             verbose: process.env.ENABLE_PARSE_VERBOSE_MODE == 'true',
             logLevel: 'error',
             liveQuery: {
-                classNames: ['Emergency', 'EmergencyState', 'LocationTracking', '_User'] // List of classes to support for query subscriptions
+                classNames: ['Emergency', 'EmergencyState', 'LocationTracking', '_User'], // List of classes to support for query subscriptions
             },
             verifyUserEmails: true,
             emailVerifyTokenValidityDuration: 24 * 60 * 60, // in seconds (2 hours = 7200 seconds)
@@ -65,17 +64,21 @@ export class ParseAPI extends BaseAPI {
                             subject: 'Zurücksetzen Ihres Passworts',
                             pathPlainText: resolve(__dirname, '../../public/password_reset_email.txt'),
                             pathHtml: resolve(__dirname, '../../public/password_reset_email.html'),
-                            callback: (user) => { return { firstName: user.get('firstname'), lastName: user.get('lastname') }; }
+                            callback: (user) => {
+                                return { firstName: user.get('firstname'), lastName: user.get('lastname') };
+                            },
                         },
                         verificationEmail: {
                             subject: 'Bitte verifizieren Sie Ihre Email für Meine-Stadt-rettet',
                             pathPlainText: resolve(__dirname, '../../public/verification_email.txt'),
                             pathHtml: resolve(__dirname, '../../public/verification_email.html'),
-                            callback: (user) => { return { firstName: user.get('firstname'), lastName: user.get('lastname') }; }
+                            callback: (user) => {
+                                return { firstName: user.get('firstname'), lastName: user.get('lastname') };
+                            },
                             // Now you can use {{firstName}} in your templates
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
 
             // Custom email templates
@@ -87,8 +90,7 @@ export class ParseAPI extends BaseAPI {
 
             // Push notification server keys for android and ios
             push: {
-                android:
-                {
+                android: {
                     apiKey: process.env.ANDROID_API_KEY, // Firebase server key for cloud messaging. Please create project in https://console.firebase.google.com/
                 },
                 /* activate with p12 certificate
@@ -99,7 +101,7 @@ export class ParseAPI extends BaseAPI {
                     production: true // Specifies which environment to connect to: Production (if true) or Sandbox
                 }
                 */
-            }
+            },
         });
     }
 }

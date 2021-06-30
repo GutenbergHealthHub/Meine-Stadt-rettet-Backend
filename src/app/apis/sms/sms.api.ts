@@ -12,8 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
+ *
+ *
  */
 
 import { BaseAPI } from '../base/base.api';
@@ -51,7 +51,8 @@ export class SMSAPI extends BaseAPI {
                         }
 
                         // this.smsController.consumeIncomingSMS('i-digital-m', new Date(req.body.addedDate), req.body.srcAddress, req.body.dstAddress, req.body.MO)
-                        this.smsController.consumeIncomingSMS('i-digital-m', new Date(), req.body.sender, '4915735981506', content)
+                        this.smsController
+                            .consumeIncomingSMS('i-digital-m', new Date(), req.body.sender, '4915735981506', content)
                             .then(() => res.sendStatus(200))
                             .catch((error) => res.status(400).send(error));
                     }

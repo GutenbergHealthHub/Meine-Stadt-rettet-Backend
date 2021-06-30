@@ -21,51 +21,59 @@ import { BaseModelService } from './base/base-modelservice';
 
 @Injectable()
 export class EmergencyStateService extends BaseModelService<EmergencyState> {
+    constructor(protected errorService: ErrorService, protected parseService: ParseService) {
+        super(errorService, parseService, EmergencyState);
+    }
 
-  constructor(protected errorService: ErrorService, protected parseService: ParseService) {
-    super(errorService, parseService, EmergencyState);
-  }
+    public getByEmergency(emergency: Emergency, greaterThanOrEqualState?: number): Promise<Array<EmergencyState>> {
+        return new Promise<Array<EmergencyState>>((resolve, reject) => {
+            const query = new Parse.Query(EmergencyState);
+            query.equalTo('emergencyRelation', emergency);
+            if (greaterThanOrEqualState) {
+                query.greaterThanOrEqualTo('state', greaterThanOrEqualState);
+            }
+            query.include('userRelation');
+            query.include('protocolRelation');
+            query.limit(99999999);
+            query.find().then(
+                (emergencyStates) => resolve(emergencyStates),
+                (error) => this.errorService.handleParseErrors(error),
+            );
+        });
+    }
 
-  public getByEmergency(emergency: Emergency, greaterThanOrEqualState?: number): Promise<Array<EmergencyState>> {
-    return new Promise<Array<EmergencyState>>((resolve, reject) => {
-      const query = new Parse.Query(EmergencyState);
-      query.equalTo('emergencyRelation', emergency);
-      if (greaterThanOrEqualState) {
-        query.greaterThanOrEqualTo('state', greaterThanOrEqualState);
-      }
-      query.include('userRelation');
-      query.include('protocolRelation');
-      query.limit(99999999);
-      query.find().then(emergencyStates => resolve(emergencyStates), error => this.errorService.handleParseErrors(error));
-    });
-  }
+    public subByEmergency(emergency: Emergency): Promise<Subscription<EmergencyState>> {
+        return new Promise<Subscription<EmergencyState>>((resolve, reject) => {
+            const query = new Parse.Query(EmergencyState);
+            query.equalTo('emergencyRelation', emergency);
+            query.include('userRelation');
+            this.parseService.subscribe<EmergencyState>(query).then((subscription) => resolve(subscription));
+        });
+    }
 
-  public subByEmergency(emergency: Emergency): Promise<Subscription<EmergencyState>> {
-    return new Promise<Subscription<EmergencyState>>((resolve, reject) => {
-      const query = new Parse.Query(EmergencyState);
-      query.equalTo('emergencyRelation', emergency);
-      query.include('userRelation');
-      this.parseService.subscribe<EmergencyState>(query).then(subscription => resolve(subscription));
-    });
-  }
+    public getUncontactedFRCount(emergency: Emergency): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
+            const query = new Parse.Query(EmergencyState);
+            query.equalTo('emergencyRelation', emergency);
+            query.greaterThan('state', EmergencyStateEnum.aborted);
+            query.equalTo('contactedAt', null);
 
-  public getUncontactedFRCount(emergency: Emergency): Promise<number> {
-    return new Promise<number>((resolve, reject) => {
-      const query = new Parse.Query(EmergencyState);
-      query.equalTo('emergencyRelation', emergency);
-      query.greaterThan('state', EmergencyStateEnum.aborted);
-      query.equalTo('contactedAt', null);
+            query.count().then(
+                (totalCount) => resolve(totalCount),
+                (error) => this.errorService.handleParseErrors(error),
+            );
+        });
+    }
 
-      query.count().then(totalCount => resolve(totalCount), error => this.errorService.handleParseErrors(error));
-    });
-  }
-
-  public getInvolvedFRCount(emergency: Emergency): Promise<number> {
-    return new Promise<number>((resolve, reject) => {
-      const query = new Parse.Query(EmergencyState);
-      query.equalTo('emergencyRelation', emergency);
-      query.greaterThan('state', EmergencyStateEnum.aborted);
-      query.count().then(totalCount => resolve(totalCount), error => this.errorService.handleParseErrors(error));
-    });
-  }
+    public getInvolvedFRCount(emergency: Emergency): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
+            const query = new Parse.Query(EmergencyState);
+            query.equalTo('emergencyRelation', emergency);
+            query.greaterThan('state', EmergencyStateEnum.aborted);
+            query.count().then(
+                (totalCount) => resolve(totalCount),
+                (error) => this.errorService.handleParseErrors(error),
+            );
+        });
+    }
 }

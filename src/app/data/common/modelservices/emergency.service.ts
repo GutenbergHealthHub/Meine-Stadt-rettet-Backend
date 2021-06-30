@@ -21,80 +21,82 @@ import { Emergency, EmergencyEnum, EmergencyState, EmergencyStateEnum, PageInfo,
 
 @Injectable()
 export class EmergencyService extends BaseModelService<Emergency> {
-
-  constructor(errorService: ErrorService, parseService: ParseService) {
-    super(errorService, parseService, Emergency);
-  }
-
-  public getByState(state: EmergencyEnum, pageInfo?: PageInfo): Promise<Array<Emergency>> {
-    return new Promise<Array<Emergency>>((resolve, reject) => {
-      let query = this.createQuery();
-      query.greaterThanOrEqualTo('state', state);
-      query = this.applyPageInfo(query, pageInfo, this.filterByFirstresponders);
-      query.find().then(emergencies => resolve(emergencies), error => this.errorService.handleParseErrors(error));
-    });
-  }
-
-  private filterByFirstresponders(query: Parse.Query<Emergency>, filterQuery: string): Parse.Query<Emergency> {
-    const newQuery = new Parse.Query(Emergency);
-    const queries = new Array<Parse.Query<User>>();
-    ['firstname', 'lastname'].forEach((attribute) => {
-      for (const filterSubQuery of (filterQuery.replace(',', ' ').replace('  ', ' ').split(' '))) {
-        const orQuery = new Parse.Query(User);
-        orQuery.matches(attribute, new RegExp(filterSubQuery), 'i');
-        queries.push(orQuery);
-      }
-    });
-    const userQuery = Parse.Query.or<User>(...queries);
-    const emergencyStateQuery = new Parse.Query(EmergencyState);
-    emergencyStateQuery.containedIn('state', [EmergencyStateEnum.finished, EmergencyStateEnum.aborted]);
-    emergencyStateQuery.matchesKeyInQuery('emergencyRelation', 'objectId', query);
-    emergencyStateQuery.matchesKeyInQuery('userRelation', 'objectId', userQuery);
-    newQuery.matchesKeyInQuery('objectId', 'emergencyRelation.objectId', emergencyStateQuery);
-    return newQuery;
-  }
-
-  public subById(emergencyId: string): Promise<Subscription<Emergency>> {
-    return new Promise<Subscription<Emergency>>((resolve, reject) => {
-      const query = this.createQuery();
-      query.equalTo('objectId', emergencyId);
-      this.parseService.subscribe<Emergency>(query).then(subscription => resolve(subscription));
-    });
-  }
-
-  public subByState(state: EmergencyEnum): Promise<Subscription<Emergency>> {
-    return new Promise<Subscription<Emergency>>((resolve, reject) => {
-      const query = this.createQuery();
-      query.descending('createdAt');
-      query.equalTo('state', state);
-      this.parseService.subscribe<Emergency>(query).then(subscription => resolve(subscription));
-    });
-  }
-
-  public subActiveEmergency(emergencyId: string): Promise<Subscription<Emergency>> {
-    return new Promise<Subscription<Emergency>>((resolve, reject) => {
-      const query = this.createQuery();
-      query.equalTo('objectId', emergencyId);
-      query.lessThan('state', 20);
-      this.parseService.subscribe<Emergency>(query).then(subscription => resolve(subscription));
-    });
-  }
-
-  public subActiveEmergencies(): Promise<Subscription<Emergency>> {
-    return new Promise<Subscription<Emergency>>((resolve, reject) => {
-      const query = this.createQuery();
-      query.descending('createdAt');
-      query.lessThan('state', 20);
-      this.parseService.subscribe<Emergency>(query).then(subscription => resolve(subscription));
-    });
-  }
-
-  public createQuery(includes?: [keyof Emergency]): Parse.Query<Emergency> {
-    const query = super.createQuery(includes);
-    if (!ParseService.isParseServer()) {
-      query.exists('controlCenterRelation');
-      query.equalTo('controlCenterRelation', Parse.User.current().get('controlCenterRelation'));
+    constructor(errorService: ErrorService, parseService: ParseService) {
+        super(errorService, parseService, Emergency);
     }
-    return query;
-  }
+
+    public getByState(state: EmergencyEnum, pageInfo?: PageInfo): Promise<Array<Emergency>> {
+        return new Promise<Array<Emergency>>((resolve, reject) => {
+            let query = this.createQuery();
+            query.greaterThanOrEqualTo('state', state);
+            query = this.applyPageInfo(query, pageInfo, this.filterByFirstresponders);
+            query.find().then(
+                (emergencies) => resolve(emergencies),
+                (error) => this.errorService.handleParseErrors(error),
+            );
+        });
+    }
+
+    private filterByFirstresponders(query: Parse.Query<Emergency>, filterQuery: string): Parse.Query<Emergency> {
+        const newQuery = new Parse.Query(Emergency);
+        const queries = new Array<Parse.Query<User>>();
+        ['firstname', 'lastname'].forEach((attribute) => {
+            for (const filterSubQuery of filterQuery.replace(',', ' ').replace('  ', ' ').split(' ')) {
+                const orQuery = new Parse.Query(User);
+                orQuery.matches(attribute, new RegExp(filterSubQuery), 'i');
+                queries.push(orQuery);
+            }
+        });
+        const userQuery = Parse.Query.or<User>(...queries);
+        const emergencyStateQuery = new Parse.Query(EmergencyState);
+        emergencyStateQuery.containedIn('state', [EmergencyStateEnum.finished, EmergencyStateEnum.aborted]);
+        emergencyStateQuery.matchesKeyInQuery('emergencyRelation', 'objectId', query);
+        emergencyStateQuery.matchesKeyInQuery('userRelation', 'objectId', userQuery);
+        newQuery.matchesKeyInQuery('objectId', 'emergencyRelation.objectId', emergencyStateQuery);
+        return newQuery;
+    }
+
+    public subById(emergencyId: string): Promise<Subscription<Emergency>> {
+        return new Promise<Subscription<Emergency>>((resolve, reject) => {
+            const query = this.createQuery();
+            query.equalTo('objectId', emergencyId);
+            this.parseService.subscribe<Emergency>(query).then((subscription) => resolve(subscription));
+        });
+    }
+
+    public subByState(state: EmergencyEnum): Promise<Subscription<Emergency>> {
+        return new Promise<Subscription<Emergency>>((resolve, reject) => {
+            const query = this.createQuery();
+            query.descending('createdAt');
+            query.equalTo('state', state);
+            this.parseService.subscribe<Emergency>(query).then((subscription) => resolve(subscription));
+        });
+    }
+
+    public subActiveEmergency(emergencyId: string): Promise<Subscription<Emergency>> {
+        return new Promise<Subscription<Emergency>>((resolve, reject) => {
+            const query = this.createQuery();
+            query.equalTo('objectId', emergencyId);
+            query.lessThan('state', 20);
+            this.parseService.subscribe<Emergency>(query).then((subscription) => resolve(subscription));
+        });
+    }
+
+    public subActiveEmergencies(): Promise<Subscription<Emergency>> {
+        return new Promise<Subscription<Emergency>>((resolve, reject) => {
+            const query = this.createQuery();
+            query.descending('createdAt');
+            query.lessThan('state', 20);
+            this.parseService.subscribe<Emergency>(query).then((subscription) => resolve(subscription));
+        });
+    }
+
+    public createQuery(includes?: [keyof Emergency]): Parse.Query<Emergency> {
+        const query = super.createQuery(includes);
+        if (!ParseService.isParseServer()) {
+            query.exists('controlCenterRelation');
+            query.equalTo('controlCenterRelation', Parse.User.current().get('controlCenterRelation'));
+        }
+        return query;
+    }
 }

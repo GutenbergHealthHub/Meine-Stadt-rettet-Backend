@@ -1,4 +1,3 @@
-
 /*
  * Copyright [2020] Universitätsmedizin Mainz, Gutenberg Health Hub
  *
@@ -21,7 +20,7 @@ export enum RoleRestrictionEnum {
     // *******************************
 
     // disables edit possibilities in the firstresponder view
-    firstresponder_readonly = 'firstresponder.readonly'
+    firstresponder_readonly = 'firstresponder.readonly',
 }
 
 export enum RolePrivilegeEnum {
@@ -34,14 +33,12 @@ export enum RolePrivilegeEnum {
     // switch between ControlCenters
     su_CCSwitch = 'su.CCSwitch',
 
-
     // *******************************
     // * component-specific privileges
     // *******************************
 
     // enables buttons to change the state of a protocol (usually after he was called by the advisor)
     protocol_afterCall = 'protocol.afterCall',
-
 
     // **********************
     // * Routing privileges

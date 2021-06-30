@@ -84,7 +84,6 @@ export class ControlCenter extends BaseModel {
         return this._SMSAPItrustedSenders;
     }
 
-
     public set SMSAPItrustedSenders(value: Array<string>) {
         this._SMSAPItrustedSenders = value;
     }
@@ -93,11 +92,13 @@ export class ControlCenter extends BaseModel {
         if (!this.SMSAPItrustedSenders) {
             return false;
         }
-        return this.SMSAPItrustedSenders.filter((value) => {
-            const cleanedValue = value.replace(/[^0-9a-zA-Z]/g, '');
-            const cleanedSender = sender.replace(/[^0-9a-zA-Z]/g, '');
-            return (cleanedSender && cleanedValue && cleanedSender === cleanedValue);
-        }).length > 0;
+        return (
+            this.SMSAPItrustedSenders.filter((value) => {
+                const cleanedValue = value.replace(/[^0-9a-zA-Z]/g, '');
+                const cleanedSender = sender.replace(/[^0-9a-zA-Z]/g, '');
+                return cleanedSender && cleanedValue && cleanedSender === cleanedValue;
+            }).length > 0
+        );
     }
 }
 

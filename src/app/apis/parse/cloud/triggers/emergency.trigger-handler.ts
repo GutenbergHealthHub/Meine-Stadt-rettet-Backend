@@ -21,7 +21,7 @@ import {
     EmergencyStateEnum,
     EmergencyTaskEnum,
     Installation,
-    InstallationDeviceEnum
+    InstallationDeviceEnum,
 } from 'app/data/models';
 import { EmergencyUtilService, Parse, PushService, ServiceManager } from 'app/data/services';
 import {
@@ -30,13 +30,12 @@ import {
     EmergencyService,
     EmergencyStateService,
     InstallationService,
-    UserService
+    UserService,
 } from 'app/data/modelservices';
 import { TriggerHandler } from './base/trigger-handler';
 
 // Main class for sending emergency to nearest firstresponders.
 class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService> {
-
     private configurationService = ServiceManager.get(ConfigurationService);
     private controlCenterService = ServiceManager.get(ControlCenterService);
     private emergencyStateService = ServiceManager.get(EmergencyStateService);
@@ -72,14 +71,25 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
                             resolve(new Set().add(installation));
                         });
                     } else {
-                        this.installationService.getAllInRangeByConfig(emergency.locationPoint, configuration).then(installations => {
-                            resolve(new Set<Installation>(installations));
-                        });
+                        this.installationService
+                            .getAllInRangeByConfig(emergency.locationPoint, configuration)
+                            .then((installations) => {
+                                resolve(new Set<Installation>(installations));
+                            });
                     }
                 });
                 console.log('Emergency Receivers of Emergency:' + emergency.id);
                 if (receivers != null) {
-                    console.log(Array.from(receivers).map(installation => installation.id + ' ' + installation.deviceType + ' ' + installation.userRelation.username));
+                    console.log(
+                        Array.from(receivers).map(
+                            (installation) =>
+                                installation.id +
+                                ' ' +
+                                installation.deviceType +
+                                ' ' +
+                                installation.userRelation.username,
+                        ),
+                    );
                 } else {
                     console.log('No receivers for emergency found');
                 }
@@ -87,15 +97,25 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
                 const lastInstallationInfo = { deviceType: null, userId: null };
                 // filter all firstresponders who do not want to get notified based on their off duty configuration.
                 const filteredReceivers = Array.from(receivers).filter((installation) => {
-                    let result = lastInstallationInfo.deviceType != installation.deviceType || installation.userRelation.id != lastInstallationInfo.userId;
+                    let result =
+                        lastInstallationInfo.deviceType != installation.deviceType ||
+                        installation.userRelation.id != lastInstallationInfo.userId;
                     // duty time calculation
                     if (installation.userRelation.dutyFrom && installation.userRelation.dutyTo) {
-                        const dutyFrom = installation.userRelation.dutyFrom.getUTCHours() * 60 + installation.userRelation.dutyFrom.getUTCMinutes();
+                        const dutyFrom =
+                            installation.userRelation.dutyFrom.getUTCHours() * 60 +
+                            installation.userRelation.dutyFrom.getUTCMinutes();
                         console.log('dutyFrom:', dutyFrom);
-                        const dutyTo = installation.userRelation.dutyTo.getUTCHours() * 60 + installation.userRelation.dutyTo.getUTCMinutes();
+                        const dutyTo =
+                            installation.userRelation.dutyTo.getUTCHours() * 60 +
+                            installation.userRelation.dutyTo.getUTCMinutes();
                         const d = new Date().getUTCHours() * 60 + new Date().getUTCMinutes();
                         console.log('currentDate:', d);
-                        result = result && (dutyFrom <= dutyTo ? ((dutyFrom < d && dutyTo < d) || (dutyFrom > d && dutyTo > d)) : (dutyFrom > d && dutyTo < d));
+                        result =
+                            result &&
+                            (dutyFrom <= dutyTo
+                                ? (dutyFrom < d && dutyTo < d) || (dutyFrom > d && dutyTo > d)
+                                : dutyFrom > d && dutyTo < d);
                     }
                     lastInstallationInfo.userId = installation.userRelation.id;
                     lastInstallationInfo.deviceType = installation.deviceType;
@@ -103,7 +123,12 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
                 });
 
                 console.log('Filtered Emergency Receivers of Emergency:' + emergency.id);
-                console.log(filteredReceivers.map(installation => installation.id + ' ' + installation.deviceType + ' ' + installation.userRelation.username));
+                console.log(
+                    filteredReceivers.map(
+                        (installation) =>
+                            installation.id + ' ' + installation.deviceType + ' ' + installation.userRelation.username,
+                    ),
+                );
 
                 // default task is first aid
                 if (!emergency.emergencyTask) {
@@ -111,7 +136,8 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
                 }
 
                 let isAEDFirstresponder: Installation = null;
-                if (emergency.emergencyTask == EmergencyTaskEnum.firstaid &&
+                if (
+                    emergency.emergencyTask == EmergencyTaskEnum.firstaid &&
                     configuration.isAEDFirstresponder &&
                     filteredReceivers.length > 1
                 ) {
@@ -138,24 +164,54 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
                     // save emergencyState record for every notified firstresponder
                     const promise = emergencyState.save();
                     // if creation of emergencyState record was successfull then send push notification.
-                    promise.then((emergencyStateItem) => {
-                        const sound = installation.userRelation.sound;
-                        const pushQuery = this.installationService.createQuery().equalTo('objectId', installation.id);
-                        console.log('Sending Initial Push to Installation ' + installation.id + ' ' + installation.deviceType + ' ' + installation.userRelation.username);
-                        // finally, send push notification
-                        this.pushService.sendEmergencyPush(pushQuery, installation, sound, configuration, emergencyStateItem, 'increment', false).then(() => {
-                            console.log('Sent Initial Push to Installation ' + installation.id + ' ' + installation.deviceType + ' ' + installation.userRelation.username);
-                        }).catch(error => {
+                    promise.then(
+                        (emergencyStateItem) => {
+                            const sound = installation.userRelation.sound;
+                            const pushQuery = this.installationService
+                                .createQuery()
+                                .equalTo('objectId', installation.id);
+                            console.log(
+                                'Sending Initial Push to Installation ' +
+                                    installation.id +
+                                    ' ' +
+                                    installation.deviceType +
+                                    ' ' +
+                                    installation.userRelation.username,
+                            );
+                            // finally, send push notification
+                            this.pushService
+                                .sendEmergencyPush(
+                                    pushQuery,
+                                    installation,
+                                    sound,
+                                    configuration,
+                                    emergencyStateItem,
+                                    'increment',
+                                    false,
+                                )
+                                .then(() => {
+                                    console.log(
+                                        'Sent Initial Push to Installation ' +
+                                            installation.id +
+                                            ' ' +
+                                            installation.deviceType +
+                                            ' ' +
+                                            installation.userRelation.username,
+                                    );
+                                })
+                                .catch((error) => {
+                                    throw error;
+                                });
+                            emergency.emergencyStateArray = emergency.emergencyStateArray || [];
+                            if (emergency.emergencyStateArray.indexOf(emergencyStateItem.id) < 0) {
+                                emergency.emergencyStateArray.push(emergencyStateItem.id);
+                                emergency.save();
+                            }
+                        },
+                        (error) => {
                             throw error;
-                        });
-                        emergency.emergencyStateArray = emergency.emergencyStateArray || [];
-                        if (emergency.emergencyStateArray.indexOf(emergencyStateItem.id) < 0) {
-                            emergency.emergencyStateArray.push(emergencyStateItem.id);
-                            emergency.save();
-                        }
-                    }, (error) => {
-                        throw error;
-                    });
+                        },
+                    );
                     createStatePromisses.push(promise);
                 }
 
@@ -174,7 +230,9 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
         if (!emergency.locationPoint && (!emergency.streetName || !emergency.city)) {
             return Promise.reject('not enough data to complete location information');
         }
-        return (!emergency.locationPoint) ? this.emergencyUtilService.setLocationByAddress(emergency) : this.emergencyUtilService.setAddressByLocation(emergency);
+        return !emergency.locationPoint
+            ? this.emergencyUtilService.setLocationByAddress(emergency)
+            : this.emergencyUtilService.setAddressByLocation(emergency);
     }
 
     private calculateNearestFirstresponderToAED(filteredReceivers: Array<Installation>): Installation {
@@ -188,7 +246,7 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
         */
     }
 
-    private reNotifyUsersInInterval(emergency: Emergency, configuration: Configuration, i: number = 0) {
+    private reNotifyUsersInInterval(emergency: Emergency, configuration: Configuration, i = 0) {
         new Promise((resolve, reject) => {
             setTimeout(() => {
                 const promisses = [new Parse.Promise()];
@@ -197,22 +255,39 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
                 emergencyStateQuery.equalTo('emergencyRelation', emergency);
                 emergencyStateQuery.find().then((emergencyStates) => {
                     for (const emergencyState of emergencyStates) {
-                        const userQuery = this.userService.createQuery()
-                            .withinKilometers('location', emergency.locationPoint, (configuration.distance / 1000));
-                        const pushQuery = this.installationService.createQuery()
+                        const userQuery = this.userService
+                            .createQuery()
+                            .withinKilometers('location', emergency.locationPoint, configuration.distance / 1000);
+                        const pushQuery = this.installationService
+                            .createQuery()
                             .equalTo('objectId', emergencyState.installationRelation.id)
                             .equalTo('deviceType', InstallationDeviceEnum.ios)
                             .matchesQuery('userRelation', userQuery)
                             .include('userRelation');
                         const promise = pushQuery.first();
                         promisses.push(promise);
-                        promise.then(installation => {
+                        promise.then((installation) => {
                             if (installation) {
                                 const sound = installation.userRelation.sound;
                                 const pushQuery = this.installationService.createQuery();
                                 pushQuery.equalTo('objectId', installation.id);
-                                console.log('Sending Interval Push to IOS Installation ' + installation.id + ' ' + installation.deviceType + ' ' + installation.userRelation.username);
-                                this.pushService.sendEmergencyPush(pushQuery, installation, sound, configuration, emergencyState, null, true);
+                                console.log(
+                                    'Sending Interval Push to IOS Installation ' +
+                                        installation.id +
+                                        ' ' +
+                                        installation.deviceType +
+                                        ' ' +
+                                        installation.userRelation.username,
+                                );
+                                this.pushService.sendEmergencyPush(
+                                    pushQuery,
+                                    installation,
+                                    sound,
+                                    configuration,
+                                    emergencyState,
+                                    null,
+                                    true,
+                                );
                             }
                         });
                     }
@@ -231,4 +306,3 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
 }
 
 TriggerHandler.register(EmergencyTriggerHandler);
-

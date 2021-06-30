@@ -1,4 +1,3 @@
-
 /*
  * Copyright [2020] Universitätsmedizin Mainz, Gutenberg Health Hub
  *
@@ -31,16 +30,16 @@ export enum EmergencyEnum {
     successfullyFinished = 11,
     aborted = 12,
     done = 20,
-    doneAndPostProcessed = 21
+    doneAndPostProcessed = 21,
 }
 
 export enum EmergencyTaskEnum {
     firstaid = 0,
     getaed = 1,
-    voluntary = 2
+    voluntary = 2,
 }
 
-export let EmergencyTaskEnumText = new Map<EmergencyTaskEnum, string>()
+export const EmergencyTaskEnumText = new Map<EmergencyTaskEnum, string>()
     .set(EmergencyTaskEnum.firstaid, 'Ersthelfer')
     .set(EmergencyTaskEnum.getaed, 'AED Holer')
     .set(EmergencyTaskEnum.voluntary, 'Spontanhelfer');
@@ -74,7 +73,7 @@ export class Emergency extends BaseModel {
     private _plz: string;
     private _allFRcontacted: boolean;
     private _testEmergencySendBy: User;
-    private _emergencyStateArray: Array<String>;
+    private _emergencyStateArray: Array<string>;
     private _firstresponderAccepted: boolean;
     private _involvedFR: number;
     private _emergencyTask: EmergencyTaskEnum;
@@ -85,13 +84,19 @@ export class Emergency extends BaseModel {
 
     public cancel(): Promise<number> {
         return new Promise<number>((resolve, reject) => {
-            Parse.Cloud.run('cancelEmergency', { emergencyId: this.id }).then(result => resolve(result), error => reject(error));
+            Parse.Cloud.run('cancelEmergency', { emergencyId: this.id }).then(
+                (result) => resolve(result),
+                (error) => reject(error),
+            );
         });
     }
 
     public finish(): Promise<number> {
         return new Promise<number>((resolve, reject) => {
-            Parse.Cloud.run('finishEmergency', { emergencyId: this.id }).then(result => resolve(result), error => reject(error));
+            Parse.Cloud.run('finishEmergency', { emergencyId: this.id }).then(
+                (result) => resolve(result),
+                (error) => reject(error),
+            );
         });
     }
 
@@ -299,11 +304,11 @@ export class Emergency extends BaseModel {
         this._testEmergencySendBy = value;
     }
 
-    public get emergencyStateArray(): Array<String> {
+    public get emergencyStateArray(): Array<string> {
         return this._emergencyStateArray;
     }
 
-    public set emergencyStateArray(value: Array<String>) {
+    public set emergencyStateArray(value: Array<string>) {
         this._emergencyStateArray = value;
     }
 

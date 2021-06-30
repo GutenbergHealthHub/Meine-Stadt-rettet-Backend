@@ -34,7 +34,6 @@ export interface IClusteredDefibrillators {
 
 @Injectable()
 export class DefibrillatorService extends BaseModelService<Defibrillator> {
-
     constructor(errorService: ErrorService, parseService: ParseService) {
         super(errorService, parseService, Defibrillator);
     }
@@ -50,7 +49,10 @@ export class DefibrillatorService extends BaseModelService<Defibrillator> {
             } else {
                 query = this.applyFilter(query, searchQuery, this.filterByAttributes);
             }
-            query.find().then(defibrillators => resolve(defibrillators), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (defibrillators) => resolve(defibrillators),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -59,7 +61,10 @@ export class DefibrillatorService extends BaseModelService<Defibrillator> {
             const query: Parse.Query<Defibrillator> = new Parse.Query(Defibrillator);
             query.limit(9999999);
             query.descending('createdAt');
-            query.find().then(defibrillators => resolve(defibrillators), error => this.errorService.handleParseErrors(error));
+            query.find().then(
+                (defibrillators) => resolve(defibrillators),
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 
@@ -80,30 +85,51 @@ export class DefibrillatorService extends BaseModelService<Defibrillator> {
             query.exists('state');
             query.notEqualTo('state', DefibrillatorState.rejected);
             query.withinGeoBox('location', new Parse.GeoPoint(bbox[0], bbox[1]), new Parse.GeoPoint(bbox[2], bbox[3]));
-            query.find().then(defibrillators => {
-                const clusterIndex = supercluster({
-                    radius: 40,
-                    maxZoom: 16
-                });
+            query.find().then(
+                (defibrillators) => {
+                    const clusterIndex = supercluster({
+                        radius: 40,
+                        maxZoom: 16,
+                    });
 
-                const features = new Array<Feature<Point>>();
-                for (let defiIndex = 0; defiIndex < defibrillators.length; ++defiIndex) {
-                    const defibrillator = defibrillators[defiIndex];
-                    features.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [defibrillator.location.latitude, defibrillator.location.longitude] }, properties: null, id: defiIndex });
-                }
-
-                const result: IClusteredDefibrillators = { clusters: new Map(), defibrillators: new Map() };
-
-                clusterIndex.load(features);
-                for (const feature of clusterIndex.getClusters(bbox, zoom) as Array<Feature<Point>>) {
-                    if (feature.properties && feature.properties.cluster) {
-                        result.clusters.set(feature.geometry.coordinates[0] + '' + feature.geometry.coordinates[1], { latitude: feature.geometry.coordinates[0], longitude: feature.geometry.coordinates[1], size: feature.properties.point_count });
-                    } else {
-                        result.defibrillators.set(defibrillators[feature.id].id as string, defibrillators[feature.id]);
+                    const features = new Array<Feature<Point>>();
+                    for (let defiIndex = 0; defiIndex < defibrillators.length; ++defiIndex) {
+                        const defibrillator = defibrillators[defiIndex];
+                        features.push({
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [defibrillator.location.latitude, defibrillator.location.longitude],
+                            },
+                            properties: null,
+                            id: defiIndex,
+                        });
                     }
-                }
-                resolve(result);
-            }, error => this.errorService.handleParseErrors(error));
+
+                    const result: IClusteredDefibrillators = { clusters: new Map(), defibrillators: new Map() };
+
+                    clusterIndex.load(features);
+                    for (const feature of clusterIndex.getClusters(bbox, zoom) as Array<Feature<Point>>) {
+                        if (feature.properties && feature.properties.cluster) {
+                            result.clusters.set(
+                                feature.geometry.coordinates[0] + '' + feature.geometry.coordinates[1],
+                                {
+                                    latitude: feature.geometry.coordinates[0],
+                                    longitude: feature.geometry.coordinates[1],
+                                    size: feature.properties.point_count,
+                                },
+                            );
+                        } else {
+                            result.defibrillators.set(
+                                defibrillators[feature.id].id as string,
+                                defibrillators[feature.id],
+                            );
+                        }
+                    }
+                    resolve(result);
+                },
+                (error) => this.errorService.handleParseErrors(error),
+            );
         });
     }
 }

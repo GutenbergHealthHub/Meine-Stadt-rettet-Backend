@@ -18,9 +18,13 @@ import { BaseModel, Parse } from './base';
 import { ControlCenter } from './control-center';
 import { UserContractBasic } from './user-contract-basic';
 import { Certificate } from './certificate';
-import { UserProfessionEnum, UserProfessionEnumText, UserQualificationEnum, UserQualificationEnumText } from './transient';
+import {
+    UserProfessionEnum,
+    UserProfessionEnumText,
+    UserQualificationEnum,
+    UserQualificationEnumText,
+} from './transient';
 import { ParseService } from '../services';
-
 
 export class User extends Parse.User {
     public static PARSE_CLASSNAME = '_User';
@@ -58,7 +62,7 @@ export class User extends Parse.User {
     private _dutyFrom: Date;
     private _dutyTo: Date;
     private _dutyOff: boolean;
-    private _dutyDays: Array<Number>;
+    private _dutyDays: Array<number>;
     private _dutyHome: boolean;
 
     constructor() {
@@ -67,82 +71,101 @@ export class User extends Parse.User {
 
     public setAttribute(attribute: string, value: any) {
         return new Promise<void>((resolve, reject) => {
-            Parse.Cloud.run('modifyUser', { userid: this.id, input: value, key: attribute }, {
-                success: (user) => {
-                    if (value !== 'null') {
-                        this[attribute] = value;
-                    }
-                    this.activated = user.activated;
-                    resolve();
+            Parse.Cloud.run(
+                'modifyUser',
+                { userid: this.id, input: value, key: attribute },
+                {
+                    success: (user) => {
+                        if (value !== 'null') {
+                            this[attribute] = value;
+                        }
+                        this.activated = user.activated;
+                        resolve();
+                    },
+                    error: (error) => {
+                        reject(error);
+                    },
                 },
-                error: (error) => {
-                    reject(error);
-                }
-            });
+            );
         });
     }
 
     public setCertificateActivated() {
         return new Promise<void>((resolve, reject) => {
-            Parse.Cloud.run('sendCertificateActivated', { userId: this.id },
+            Parse.Cloud.run(
+                'sendCertificateActivated',
+                { userId: this.id },
                 {
                     success: () => {
                         resolve();
                     },
                     error: (error) => {
                         reject(error);
-                    }
-                });
+                    },
+                },
+            );
         });
     }
 
     public sendMail(mailType: string) {
         return new Promise<void>((resolve, reject) => {
-            Parse.Cloud.run('sendEmail', {
-                emailTemplate: mailType,
-                target: this.username,
-                firstname: this.firstname,
-                lastname: this.lastname,
-                link: 'www.meine-stadt-rettet.de'
-            }, {
+            Parse.Cloud.run(
+                'sendEmail',
+                {
+                    emailTemplate: mailType,
+                    target: this.username,
+                    firstname: this.firstname,
+                    lastname: this.lastname,
+                    link: 'www.meine-stadt-rettet.de',
+                },
+                {
                     success: () => {
                         resolve();
                     },
                     error: (error) => {
                         reject(error);
-                    }
-                });
+                    },
+                },
+            );
         });
     }
 
     public deleteUser(id: string) {
         return new Promise<void>((resolve, reject) => {
-            Parse.Cloud.run('deleteUser', {
-                userId: id
-            }, {
+            Parse.Cloud.run(
+                'deleteUser',
+                {
+                    userId: id,
+                },
+                {
                     success: () => {
                         resolve();
                     },
                     error: (error) => {
                         reject(error);
-                    }
-                });
+                    },
+                },
+            );
         });
     }
 
     public createTestAlarm(id: string) {
         return new Promise<void>((resolve, reject) => {
-            Parse.Cloud.run('createTestAlarm', {
-                userId: id,
-                controlCenter: Parse.User.current().get('controlCenterRelation').get('name')
-            }, {
+            Parse.Cloud.run(
+                'createTestAlarm',
+                {
+                    userId: id,
+                    controlCenter: Parse.User.current().get('controlCenterRelation').get('name'),
+                },
+                {
                     success: () => {
                         resolve();
                     },
                     error: (error) => {
                         reject(error);
-                    }
-                });
+                    },
+                },
+            );
         });
     }
 
@@ -424,11 +447,11 @@ export class User extends Parse.User {
         this._dutyOff = value;
     }
 
-    get dutyDays(): Array<Number> {
+    get dutyDays(): Array<number> {
         return this._dutyDays;
     }
 
-    set dutyDays(value: Array<Number>) {
+    set dutyDays(value: Array<number>) {
         this._dutyDays = value;
     }
 

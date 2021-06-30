@@ -17,20 +17,26 @@
 import maps from '@google/maps';
 
 export class GoogleMapsService {
-    private static googleMapsClient = maps.createClient({ key: process.env.MAPS_API_KEY, language: 'de', Promise: Promise });
+    private static googleMapsClient = maps.createClient({
+        key: process.env.MAPS_API_KEY,
+        language: 'de',
+        Promise: Promise,
+    });
     public getClient() {
         return GoogleMapsService.googleMapsClient;
     }
 
     public getGeolocationFromAddress(address: string): Promise<Parse.GeoPoint> {
         return new Promise<Parse.GeoPoint>((resolve, reject) => {
-            this.getClient().geocode({address: address}, (error, response) => {
+            this.getClient().geocode({ address: address }, (error, response) => {
                 if (error == null) {
                     const geometry = response.json.results[0].geometry;
-                    resolve(new Parse.GeoPoint({
-                        latitude: geometry.location.lat,
-                        longitude: geometry.location.lng
-                    }));
+                    resolve(
+                        new Parse.GeoPoint({
+                            latitude: geometry.location.lat,
+                            longitude: geometry.location.lng,
+                        }),
+                    );
                 } else {
                     console.warn(error);
                     reject(error);
@@ -39,4 +45,3 @@ export class GoogleMapsService {
         });
     }
 }
-

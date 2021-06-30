@@ -20,15 +20,16 @@ import { Files } from '../models';
 
 @Injectable()
 export class FileService {
+    constructor(private errorService: ErrorService, private parseService: ParseService) {}
 
-  constructor(private errorService: ErrorService, private parseService: ParseService) {
-  }
-
-  public getByShortTitle(title: string): Promise<Files> {
-    return new Promise<Files>((resolve, reject) => {
-      const query = new Parse.Query(Files);
-      query.equalTo('short_title', title);
-      query.first().then(fileItem => resolve(fileItem), error => this.errorService.handleParseErrors(error));
-    });
-  }
+    public getByShortTitle(title: string): Promise<Files> {
+        return new Promise<Files>((resolve, reject) => {
+            const query = new Parse.Query(Files);
+            query.equalTo('short_title', title);
+            query.first().then(
+                (fileItem) => resolve(fileItem),
+                (error) => this.errorService.handleParseErrors(error),
+            );
+        });
+    }
 }

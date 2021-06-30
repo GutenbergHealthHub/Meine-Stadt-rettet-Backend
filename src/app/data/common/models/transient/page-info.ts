@@ -22,7 +22,7 @@ export class PageInfo {
     private _rowLimit: number;
     private _filterQuery: string;
 
-    public constructor(rowLimit: number, order: string, orderAsc: boolean = true) {
+    public constructor(rowLimit: number, order: string, orderAsc = true) {
         this.rowLimit = rowLimit;
         this.order = order;
         this.pageOffset = 0;

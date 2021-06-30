@@ -1,4 +1,3 @@
-
 /*
  * Copyright [2020] Universitätsmedizin Mainz, Gutenberg Health Hub
  *
@@ -15,16 +14,27 @@
  * limitations under the License.
  */
 
-import { IncomingSMS, IncomingSMSProcessingListEntryResult, IncomingSMSProcessingListEntry, Emergency, EmergencyEnum } from 'app/data/models';
+import {
+    IncomingSMS,
+    IncomingSMSProcessingListEntryResult,
+    IncomingSMSProcessingListEntry,
+    Emergency,
+    EmergencyEnum,
+} from 'app/data/models';
 import { ControlCenterService } from 'app/data/modelservices';
 import { ServiceManager, GoogleMapsService } from 'app/data/services';
 
 export class SMSController {
-
     private controlCenterService = ServiceManager.get(ControlCenterService);
     private googleMapsService = ServiceManager.get(GoogleMapsService);
 
-    public consumeIncomingSMS(apiProvider: string, apiProviderTime: Date, senderAddress: string, receiverAddress: string, content: string) {
+    public consumeIncomingSMS(
+        apiProvider: string,
+        apiProviderTime: Date,
+        senderAddress: string,
+        receiverAddress: string,
+        content: string,
+    ) {
         return new Promise<void>((resolve, reject) => {
             const incomingSMS = new IncomingSMS();
             incomingSMS.apiProvider = apiProvider;
@@ -32,49 +42,68 @@ export class SMSController {
             incomingSMS.senderAddress = senderAddress;
             incomingSMS.receiverAddress = receiverAddress;
             incomingSMS.content = content;
-            incomingSMS.save().then((sms) => {
-                console.log('saved SMS');
-                console.log(incomingSMS);
-                enum AvailableProcessingMethodNames {
-                    createEmergencyBySMS = 'createEmergencyBySMS'
-                }
-
-                const availableProcessingMethods = new Map<AvailableProcessingMethodNames, (incomingSMS: IncomingSMS) => Promise<IncomingSMSProcessingListEntryResult>>();
-                availableProcessingMethods.set(AvailableProcessingMethodNames.createEmergencyBySMS, this.createEmergencyBySMS);
-
-                const selectedProcessingMethods = new Array<AvailableProcessingMethodNames>();
-                switch (apiProvider) {
-                    case ('i-digital-m'): {
-                        selectedProcessingMethods.push(AvailableProcessingMethodNames.createEmergencyBySMS);
-                    } break;
-                }
-
-                if (selectedProcessingMethods.length == 0) {
-                    resolve();
-                }
-
-                for (const selectedProcessingMethod of selectedProcessingMethods) {
-                    const processingMethod = availableProcessingMethods.get(selectedProcessingMethod);
-                    if (processingMethod) {
-                        const processingListEntry = new IncomingSMSProcessingListEntry(selectedProcessingMethod);
-                        const resultPromise = processingMethod.bind(this)(incomingSMS);
-                        resultPromise.then(result => {
-                            processingListEntry.setResult(result);
-                            sms.processingList.push(processingListEntry);
-                            sms.save();
-                            if (result.status !== 0) {
-                                reject('SMS with ID "' + sms.id + '" was not processed.');
-                                console.error('Processing of incoming SMS with ID "' + sms.id + '" failed for method ' + selectedProcessingMethod + '. \r\nMessage: ' + result.message);
-                            } else {
-                                resolve();
-                            }
-                        });
+            incomingSMS.save().then(
+                (sms) => {
+                    console.log('saved SMS');
+                    console.log(incomingSMS);
+                    enum AvailableProcessingMethodNames {
+                        createEmergencyBySMS = 'createEmergencyBySMS',
                     }
-                }
-            }, error => { console.log(error), reject(error); });
+
+                    const availableProcessingMethods = new Map<
+                        AvailableProcessingMethodNames,
+                        (incomingSMS: IncomingSMS) => Promise<IncomingSMSProcessingListEntryResult>
+                    >();
+                    availableProcessingMethods.set(
+                        AvailableProcessingMethodNames.createEmergencyBySMS,
+                        this.createEmergencyBySMS,
+                    );
+
+                    const selectedProcessingMethods = new Array<AvailableProcessingMethodNames>();
+                    switch (apiProvider) {
+                        case 'i-digital-m':
+                            {
+                                selectedProcessingMethods.push(AvailableProcessingMethodNames.createEmergencyBySMS);
+                            }
+                            break;
+                    }
+
+                    if (selectedProcessingMethods.length == 0) {
+                        resolve();
+                    }
+
+                    for (const selectedProcessingMethod of selectedProcessingMethods) {
+                        const processingMethod = availableProcessingMethods.get(selectedProcessingMethod);
+                        if (processingMethod) {
+                            const processingListEntry = new IncomingSMSProcessingListEntry(selectedProcessingMethod);
+                            const resultPromise = processingMethod.bind(this)(incomingSMS);
+                            resultPromise.then((result) => {
+                                processingListEntry.setResult(result);
+                                sms.processingList.push(processingListEntry);
+                                sms.save();
+                                if (result.status !== 0) {
+                                    reject('SMS with ID "' + sms.id + '" was not processed.');
+                                    console.error(
+                                        'Processing of incoming SMS with ID "' +
+                                            sms.id +
+                                            '" failed for method ' +
+                                            selectedProcessingMethod +
+                                            '. \r\nMessage: ' +
+                                            result.message,
+                                    );
+                                } else {
+                                    resolve();
+                                }
+                            });
+                        }
+                    }
+                },
+                (error) => {
+                    console.log(error), reject(error);
+                },
+            );
         });
     }
-
 
     private createEmergencyBySMS(sms: IncomingSMS): Promise<IncomingSMSProcessingListEntryResult> {
         return new Promise<IncomingSMSProcessingListEntryResult>((resolvePromise) => {
@@ -106,11 +135,13 @@ export class SMSController {
                     return ERROR('informationString missing');
                 }
 
-                const latLngGiven = (locationPointX && locationPointY);
-                const addressGiven = (city && street && streetNumber);
+                const latLngGiven = locationPointX && locationPointY;
+                const addressGiven = city && street && streetNumber;
 
                 if (!latLngGiven && !addressGiven) {
-                    return ERROR('Parts of (locationPointX and locationPointY) or (city and street and streetNumber) missing');
+                    return ERROR(
+                        'Parts of (locationPointX and locationPointY) or (city and street and streetNumber) missing',
+                    );
                 }
 
                 this.controlCenterService.getById(controlCenterId).then((controlCenter) => {
@@ -119,21 +150,26 @@ export class SMSController {
                     }
 
                     if (!controlCenter.isTrustedSMSAPISender(sms.senderAddress)) {
-                        return ERROR('The SMS sender "' + sms.senderAddress + '" is not part of the controlCenter\'s trust list: ' + controlCenter.SMSAPItrustedSenders);
+                        return ERROR(
+                            'The SMS sender "' +
+                                sms.senderAddress +
+                                '" is not part of the controlCenter\'s trust list: ' +
+                                controlCenter.SMSAPItrustedSenders,
+                        );
                     }
 
                     const geocoder = this.googleMapsService.getClient();
                     const emergency = new Emergency();
                     emergency.controlCenterRelation = controlCenter;
                     emergency.informationString = informationString;
-                    emergency.keyword = (keyword) ? keyword : undefined;
-                    emergency.patientName = (patientName) ? patientName : undefined;
-                    emergency.indicatorName = (indicatorName) ? indicatorName : undefined;
-                    emergency.emergencyNumberDC = (emergencyNumber) ? emergencyNumber : undefined;
+                    emergency.keyword = keyword ? keyword : undefined;
+                    emergency.patientName = patientName ? patientName : undefined;
+                    emergency.indicatorName = indicatorName ? indicatorName : undefined;
+                    emergency.emergencyNumberDC = emergencyNumber ? emergencyNumber : undefined;
                     emergency.state = EmergencyEnum.new;
                     if (addressGiven) {
-                        emergency.city = (city) ? city : undefined;
-                        emergency.streetName = (street) ? street : undefined;
+                        emergency.city = city ? city : undefined;
+                        emergency.streetName = street ? street : undefined;
                         emergency.streetNumber = streetNumber;
                     }
                     if (latLngGiven) {
@@ -142,51 +178,73 @@ export class SMSController {
                         if (addressGiven) {
                             return FINISH(emergency);
                         } else {
-                            geocoder.reverseGeocode({ latlng: { lat: locationPointX, lng: locationPointY } }).asPromise().then((response) => {
-                                const results = response.json.results;
-                                if (results.length >= 1) {
-                                    for (const addressComponent of results[0].address_components) {
-                                        if (addressComponent.types.indexOf('locality') >= 0) {
-                                            emergency.city = addressComponent.long_name;
-                                        } else if (addressComponent.types.indexOf('postal_code') >= 0) {
-                                            emergency.zip = addressComponent.long_name;
-                                        } else if (addressComponent.types.indexOf('route') >= 0) {
-                                            emergency.streetName = addressComponent.long_name;
-                                        } else if (addressComponent.types.indexOf('street_number') >= 0) {
-                                            emergency.streetNumber = addressComponent.long_name;
-                                        } else if (addressComponent.types.indexOf('country') >= 0) {
-                                            emergency.country = addressComponent.long_name;
+                            geocoder
+                                .reverseGeocode({ latlng: { lat: locationPointX, lng: locationPointY } })
+                                .asPromise()
+                                .then((response) => {
+                                    const results = response.json.results;
+                                    if (results.length >= 1) {
+                                        for (const addressComponent of results[0].address_components) {
+                                            if (addressComponent.types.indexOf('locality') >= 0) {
+                                                emergency.city = addressComponent.long_name;
+                                            } else if (addressComponent.types.indexOf('postal_code') >= 0) {
+                                                emergency.zip = addressComponent.long_name;
+                                            } else if (addressComponent.types.indexOf('route') >= 0) {
+                                                emergency.streetName = addressComponent.long_name;
+                                            } else if (addressComponent.types.indexOf('street_number') >= 0) {
+                                                emergency.streetNumber = addressComponent.long_name;
+                                            } else if (addressComponent.types.indexOf('country') >= 0) {
+                                                emergency.country = addressComponent.long_name;
+                                            }
                                         }
                                     }
-                                }
-                                return FINISH(emergency);
-                            });
+                                    return FINISH(emergency);
+                                });
                         }
                     } else {
-                        const address = emergency.streetName + ' ' + emergency.streetNumber + ', ' + emergency.zip + ' ' + emergency.city;
-                        geocoder.geocode({
-                            address: address,
-                            components: { country: 'DE' }
-                        }).asPromise().then((response) => {
-                            const results = response.json.results;
-                            if (results.length >= 1) {
-                                emergency.setLocationPoint(results[0].geometry.location.lat, results[0].geometry.location.lng);
-                                return FINISH(emergency);
-                            } else {
-                                return ERROR('Could not determine LatLng for address: ' + address);
-                            }
-                        }).catch((err) => {
-                            console.log(err);
-                        });
+                        const address =
+                            emergency.streetName +
+                            ' ' +
+                            emergency.streetNumber +
+                            ', ' +
+                            emergency.zip +
+                            ' ' +
+                            emergency.city;
+                        geocoder
+                            .geocode({
+                                address: address,
+                                components: { country: 'DE' },
+                            })
+                            .asPromise()
+                            .then((response) => {
+                                const results = response.json.results;
+                                if (results.length >= 1) {
+                                    emergency.setLocationPoint(
+                                        results[0].geometry.location.lat,
+                                        results[0].geometry.location.lng,
+                                    );
+                                    return FINISH(emergency);
+                                } else {
+                                    return ERROR('Could not determine LatLng for address: ' + address);
+                                }
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
                     }
                 });
-            }).then((emergency) => {
-                emergency.save().then(() => {
-                    resolvePromise(IncomingSMSProcessingListEntryResult.ok());
-                }, (reason) => resolvePromise(IncomingSMSProcessingListEntryResult.error(reason)));
-            }).catch((reason) => {
-                resolvePromise(IncomingSMSProcessingListEntryResult.error(reason));
-            });
+            })
+                .then((emergency) => {
+                    emergency.save().then(
+                        () => {
+                            resolvePromise(IncomingSMSProcessingListEntryResult.ok());
+                        },
+                        (reason) => resolvePromise(IncomingSMSProcessingListEntryResult.error(reason)),
+                    );
+                })
+                .catch((reason) => {
+                    resolvePromise(IncomingSMSProcessingListEntryResult.error(reason));
+                });
         });
     }
 }
