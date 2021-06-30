@@ -1,77 +1,90 @@
 {
-  "name": "meine-stadt-rettet-opensource-server",
-  "version": "1.0.0",
-  "description": "Meine-Stadt-rettet open source server made with Parse Server",
-  "license": "Universitätsmedizin Mainz, Gutenberg Health Hub, Apache license 2.0",
-  "engines": {
-    "node": ">= 8.0.0"
-  },
-  "scripts": {
-    "start": "npm run serve",
-    "build": "npm run build-ts && npm run copy-static-assets",
-    "serve": "node dist/app/server.js",
-    "start-complete": "npm run build && npm run serve-prod",
-    "watch-node": "nodemon dist/app/server.js",
-    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\"  \"npm run watch-ts\" \"npm run watch-node\"",
-    "watch-test": "npm run test -- --watchAll",
-    "build-ts": "tsc",
-    "watch-ts": "tsc -w",
-    "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "copy-static-assets": "ts-node tools/copyStaticAssets.ts",
-    "debug": "npm run build && npm run watch-debug-local",
-    "debug-localdb": "npm run build && npm run watch-debug-localdb",
-    "dashboard": "parse-dashboard --appId MSROpenSourceAPPID --masterKey MSROpenSourceMasterKey --serverURL=\"http://localhost:2505/parse\" --appName MSR_OpenSource",
-    "serve-debug-local": "nodemon --inspect -r dotenv/config dist/app/server.js dotenv_config_path=dist/environments/localhost.env",
-    "serve-prod": "node -r dotenv/config dist/app/server.js dotenv_config_path=dist/environments/production.env",
-    "watch-debug-localdb": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug-localdb\" \"npm run dashboard\"",
-    "watch-debug-local": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug-local\" \"npm run dashboard\"",
-    "postinstall": "npm run build"
-  },
-  "dependencies": {
-    "@angular/core": "^6.0.7",
-    "@google/maps": "^0.5.4",
-    "app-module-path": "^2.2.0",
-    "axios": "^0.18.0",
-    "bcrypt": "^5.0.0",
-    "errorhandler": "^1.5.0",
-    "express": "^4.16.3",
-    "geojson": "^0.5.0",
-    "node-schedule": "^1.3.0",
-    "npm": "^6.5.0",
-    "parse": "^1.11.1",
-    "parse-dashboard": "^1.2.0",
-    "parse-server": "^2.8.2",
-    "parse-server-mailgun": "^2.4.11",
-    "parse-server-push-adapter": "^2.0.2",
-    "rxjs": "^6.2.2",
-    "rxjs-compat": "^6.2.2",
-    "supercluster": "^4.0.1"
-  },
-  "devDependencies": {
-    "@types/body-parser": "^1.17.0",
-    "@types/dotenv": "^4.0.3",
-    "@types/errorhandler": "^0.0.32",
-    "@types/express": "^4.16.0",
-    "@types/express-session": "^1.15.10",
-    "@types/google__maps": "^0.5.2",
-    "@types/node": "^9.6.23",
-    "@types/parse": "^2.4.4",
-    "@types/shelljs": "^0.7.9",
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
-    "@typescript-eslint/parser": "^4.28.1",
-    "concurrently": "^3.6.1",
-    "dotenv": "^4.0.0",
-    "eslint": "^7.29.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "nodemon": "^1.18.10",
-    "prettier": "^2.3.2",
-    "shelljs": "^0.8.2",
-    "ts-node": "^5.0.1",
-    "tslint": "^5.10.0",
-    "typescript": "^2.9.2"
-  },
-  "_moduleAliases": {
-    "app": "app"
-  }
+    "name": "meine-stadt-rettet-opensource-server",
+    "version": "1.0.0",
+    "description": "Meine-Stadt-rettet open source server made with Parse Server",
+    "license": "Universitätsmedizin Mainz, Gutenberg Health Hub, Apache license 2.0",
+    "engines": {
+        "node": ">= 8.0.0"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.{js,ts,tsx}": [
+            "eslint --fix"
+        ]
+    },
+    "scripts": {
+        "prepare": "husky install",
+        "start": "npm run serve",
+        "build": "npm run build-ts && npm run copy-static-assets",
+        "serve": "node dist/app/server.js",
+        "start-complete": "npm run build && npm run serve-prod",
+        "watch-node": "nodemon dist/app/server.js",
+        "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\"  \"npm run watch-ts\" \"npm run watch-node\"",
+        "watch-test": "npm run test -- --watchAll",
+        "build-ts": "tsc",
+        "watch-ts": "tsc -w",
+        "tslint": "tslint -c tslint.json -p tsconfig.json",
+        "copy-static-assets": "ts-node tools/copyStaticAssets.ts",
+        "debug": "npm run build && npm run watch-debug-local",
+        "debug-localdb": "npm run build && npm run watch-debug-localdb",
+        "dashboard": "parse-dashboard --appId MSROpenSourceAPPID --masterKey MSROpenSourceMasterKey --serverURL=\"http://localhost:2505/parse\" --appName MSR_OpenSource",
+        "serve-debug-local": "nodemon --inspect -r dotenv/config dist/app/server.js dotenv_config_path=dist/environments/localhost.env",
+        "serve-prod": "node -r dotenv/config dist/app/server.js dotenv_config_path=dist/environments/production.env",
+        "watch-debug-localdb": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug-localdb\" \"npm run dashboard\"",
+        "watch-debug-local": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug-local\" \"npm run dashboard\"",
+        "postinstall": "npm run build",
+        "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
+    },
+    "dependencies": {
+        "@angular/core": "^6.0.7",
+        "@google/maps": "^0.5.4",
+        "app-module-path": "^2.2.0",
+        "axios": "^0.18.0",
+        "bcrypt": "^5.0.0",
+        "errorhandler": "^1.5.0",
+        "express": "^4.16.3",
+        "geojson": "^0.5.0",
+        "node-schedule": "^1.3.0",
+        "npm": "^6.5.0",
+        "parse": "^1.11.1",
+        "parse-dashboard": "^1.2.0",
+        "parse-server": "^2.8.2",
+        "parse-server-mailgun": "^2.4.11",
+        "parse-server-push-adapter": "^2.0.2",
+        "rxjs": "^6.2.2",
+        "rxjs-compat": "^6.2.2",
+        "supercluster": "^4.0.1"
+    },
+    "devDependencies": {
+        "@types/body-parser": "^1.17.0",
+        "@types/dotenv": "^4.0.3",
+        "@types/errorhandler": "^0.0.32",
+        "@types/express": "^4.16.0",
+        "@types/express-session": "^1.15.10",
+        "@types/google__maps": "^0.5.2",
+        "@types/node": "^9.6.23",
+        "@types/parse": "^2.4.4",
+        "@types/shelljs": "^0.7.9",
+        "@typescript-eslint/eslint-plugin": "^4.28.1",
+        "@typescript-eslint/parser": "^4.28.1",
+        "concurrently": "^3.6.1",
+        "dotenv": "^4.0.0",
+        "eslint": "^7.29.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "husky": "^6.0.0",
+        "nodemon": "^1.18.10",
+        "prettier": "^2.3.2",
+        "shelljs": "^0.8.2",
+        "ts-node": "^5.0.1",
+        "tslint": "^5.10.0",
+        "typescript": "^2.9.2"
+    },
+    "_moduleAliases": {
+        "app": "app"
+    }
 }
