@@ -27,31 +27,33 @@ export class EmergencyUtilService {
         return new Promise<Emergency>((resolve, reject) => {
             this.googleMapsService
                 .getClient()
-                .geocode(
-                    { address: emergency.streetName + ' ' + emergency.streetNumber + ', ' + emergency.city },
-                    (error, response) => {
-                        if (error == null) {
-                            const geometry = response.json.results[0].geometry;
-                            emergency.locationPoint = new Parse.GeoPoint({
-                                latitude: geometry.location.lat,
-                                longitude: geometry.location.lng,
-                            });
-                            emergency.save().then(
-                                (emergency) => {
-                                    console.log('geolocation save success');
-                                    resolve(emergency);
-                                },
-                                (error) => {
-                                    console.log('geolocation save error');
-                                    reject(error.message);
-                                },
-                            );
-                        } else {
-                            console.warn(error);
-                            reject(error);
-                        }
+                .geocode({
+                    params: {
+                        address: emergency.streetName + ' ' + emergency.streetNumber + ', ' + emergency.city,
+                        key: process.env.MAPS_API_KEY,
                     },
-                );
+                })
+                .then((response) => {
+                    const geometry = response.data.results[0].geometry;
+                    emergency.locationPoint = new Parse.GeoPoint({
+                        latitude: geometry.location.lat,
+                        longitude: geometry.location.lng,
+                    });
+                    emergency.save().then(
+                        (emergency) => {
+                            console.log('geolocation save success');
+                            resolve(emergency);
+                        },
+                        (error) => {
+                            console.log('geolocation save error');
+                            reject(error.message);
+                        },
+                    );
+                })
+                .catch((error) => {
+                    console.warn(error);
+                    reject(error);
+                });
         });
     }
 
@@ -60,64 +62,62 @@ export class EmergencyUtilService {
             try {
                 this.googleMapsService
                     .getClient()
-                    .reverseGeocode(
-                        { latlng: [emergency.locationPoint.latitude, emergency.locationPoint.longitude] },
-                        (error, response) => {
-                            if (error == null) {
-                                const components = response.json.results[0].address_components;
-                                for (const component of components) {
-                                    const type = component.types[0];
-                                    switch (type) {
-                                        case 'route':
-                                            {
-                                                emergency.streetName = !emergency.streetName
-                                                    ? component.long_name
-                                                    : emergency.streetName;
-                                            }
-                                            break;
-                                        case 'street_address':
-                                            {
-                                                emergency.streetNumber = !emergency.streetNumber
-                                                    ? component.long_name
-                                                    : emergency.streetNumber;
-                                            }
-                                            break;
-                                        case 'locality':
-                                            {
-                                                emergency.city = !emergency.city ? component.long_name : emergency.city;
-                                            }
-                                            break;
-                                        case 'postal_code':
-                                            {
-                                                emergency.zip = !emergency.zip ? component.long_name : emergency.zip;
-                                            }
-                                            break;
-                                        case 'country':
-                                            {
-                                                emergency.country = !emergency.country
-                                                    ? component.long_name
-                                                    : emergency.country;
-                                            }
-                                            break;
-                                    }
-                                }
-                                // save Emergency
-                                emergency.save().then(
-                                    () => {
-                                        console.log('address save success');
-                                        resolve(emergency);
-                                    },
-                                    (error) => {
-                                        console.log('address save error');
-                                        reject(error.message);
-                                    },
-                                );
-                            } else {
-                                console.warn(error);
-                                reject(error);
-                            }
+                    .reverseGeocode({
+                        params: {
+                            latlng: [emergency.locationPoint.latitude, emergency.locationPoint.longitude],
+                            key: process.env.MAPS_API_KEY,
                         },
-                    );
+                    })
+                    .then((response) => {
+                        const components = response.data.results[0].address_components;
+                        for (const component of components) {
+                            const type = component.types[0];
+                            switch (type) {
+                                case 'route':
+                                    {
+                                        emergency.streetName = !emergency.streetName
+                                            ? component.long_name
+                                            : emergency.streetName;
+                                    }
+                                    break;
+                                case 'street_number':
+                                    {
+                                        emergency.streetNumber = !emergency.streetNumber
+                                            ? component.long_name
+                                            : emergency.streetNumber;
+                                    }
+                                    break;
+                                case 'locality':
+                                    {
+                                        emergency.city = !emergency.city ? component.long_name : emergency.city;
+                                    }
+                                    break;
+                                case 'postal_code':
+                                    {
+                                        emergency.zip = !emergency.zip ? component.long_name : emergency.zip;
+                                    }
+                                    break;
+                                case 'country':
+                                    {
+                                        emergency.country = !emergency.country
+                                            ? component.long_name
+                                            : emergency.country;
+                                    }
+                                    break;
+                            }
+                        }
+                        // save Emergency
+                        emergency.save().then(
+                            () => {
+                                console.log('address save success');
+                                resolve(emergency);
+                            },
+                            (error) => {
+                                console.log('address save error');
+                                reject(error.message);
+                            },
+                        );
+                    });
             } catch (e) {
                 console.warn(e);
                 reject(e);

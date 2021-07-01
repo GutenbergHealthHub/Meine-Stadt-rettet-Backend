@@ -18,6 +18,7 @@ import { EmergencyStateEnum, LocationTracking } from 'app/data/models';
 import { ServiceManager, GoogleMapsService } from 'app/data/services';
 import { EmergencyStateService, LocationTrackingService } from 'app/data/modelservices';
 import { TriggerHandler } from './base/trigger-handler';
+import { TravelMode } from '@googlemaps/google-maps-services-js';
 
 // Location tracking trigger calculates the current distance of the firstresponder to the emergency location.
 class LocationTrackingTriggerHandler extends TriggerHandler<LocationTracking, LocationTrackingService> {
@@ -45,35 +46,37 @@ class LocationTrackingTriggerHandler extends TriggerHandler<LocationTracking, Lo
                 );
 
                 // Save distance and duration with google maps service.
-                this.googleMapsService.getClient().distanceMatrix(
-                    {
-                        origins: [locationTracking.location.latitude + ', ' + locationTracking.location.longitude],
-                        destinations: [
-                            emergencyState.emergencyRelation.locationPoint.latitude +
-                                ', ' +
-                                emergencyState.emergencyRelation.locationPoint.longitude,
-                        ],
-                        mode: 'walking',
-                    },
-                    (error, response) => {
-                        if (error == null) {
-                            const results = response.json.rows[0].elements;
-                            const element = results[0];
+                this.googleMapsService
+                    .getClient()
+                    .distancematrix({
+                        params: {
+                            origins: [locationTracking.location.latitude + ', ' + locationTracking.location.longitude],
+                            destinations: [
+                                emergencyState.emergencyRelation.locationPoint.latitude +
+                                    ', ' +
+                                    emergencyState.emergencyRelation.locationPoint.longitude,
+                            ],
+                            mode: TravelMode.walking,
+                            key: process.env.MAPS_API_KEY,
+                        },
+                    })
+                    .then((result) => {
+                        const results = result.data.rows[0].elements;
+                        const element = results[0];
 
-                            locationTracking.duration = element.duration.value / 60;
-                            locationTracking.distance = element.distance.value;
-                            locationTracking.save();
+                        locationTracking.duration = element.duration.value / 60;
+                        locationTracking.distance = element.distance.value;
+                        locationTracking.save();
 
-                            if (locationTracking.distance <= 20) {
-                                emergencyState.state = EmergencyStateEnum.arrived;
-                                emergencyState.save();
-                            }
-                        } else {
-                            console.warn('LocationTracking error while getting distance from MAPS API');
-                            console.warn(error);
+                        if (locationTracking.distance <= 20) {
+                            emergencyState.state = EmergencyStateEnum.arrived;
+                            emergencyState.save();
                         }
-                    },
-                );
+                    })
+                    .catch((error) => {
+                        console.warn('LocationTracking error while getting distance from MAPS API');
+                        console.warn(error);
+                    });
             });
     }
 }

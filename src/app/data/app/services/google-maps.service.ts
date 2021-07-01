@@ -14,34 +14,30 @@
  * limitations under the License.
  */
 
-import maps from '@google/maps';
+import { Client } from '@googlemaps/google-maps-services-js';
 
 export class GoogleMapsService {
-    private static googleMapsClient = maps.createClient({
-        key: process.env.MAPS_API_KEY,
-        language: 'de',
-        Promise: Promise,
-    });
-    public getClient() {
+    static googleMapsClient = new Client({ config: {} });
+    public getClient(): Client {
         return GoogleMapsService.googleMapsClient;
     }
 
     public getGeolocationFromAddress(address: string): Promise<Parse.GeoPoint> {
         return new Promise<Parse.GeoPoint>((resolve, reject) => {
-            this.getClient().geocode({ address: address }, (error, response) => {
-                if (error == null) {
-                    const geometry = response.json.results[0].geometry;
+            this.getClient()
+                .geocode({
+                    params: { key: process.env.MAPS_API_KEY, address: address },
+                })
+                .then((response) => {
+                    const geometry = response.data.results[0].geometry;
                     resolve(
                         new Parse.GeoPoint({
                             latitude: geometry.location.lat,
                             longitude: geometry.location.lng,
                         }),
                     );
-                } else {
-                    console.warn(error);
-                    reject(error);
-                }
-            });
+                })
+                .catch((error) => reject(error));
         });
     }
 }

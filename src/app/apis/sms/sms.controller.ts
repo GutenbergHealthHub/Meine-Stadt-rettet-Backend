@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { AddressType } from '@googlemaps/google-maps-services-js';
 import {
     IncomingSMS,
     IncomingSMSProcessingListEntryResult,
@@ -179,21 +180,30 @@ export class SMSController {
                             return FINISH(emergency);
                         } else {
                             geocoder
-                                .reverseGeocode({ latlng: { lat: locationPointX, lng: locationPointY } })
-                                .asPromise()
+                                .reverseGeocode({
+                                    params: {
+                                        latlng: {
+                                            latitude: locationPointX,
+                                            longitude: locationPointY,
+                                        },
+                                        key: process.env.MAPS_API_KEY,
+                                    },
+                                })
                                 .then((response) => {
-                                    const results = response.json.results;
+                                    const results = response.data.results;
                                     if (results.length >= 1) {
                                         for (const addressComponent of results[0].address_components) {
-                                            if (addressComponent.types.indexOf('locality') >= 0) {
+                                            if (addressComponent.types.indexOf(AddressType.locality) >= 0) {
                                                 emergency.city = addressComponent.long_name;
-                                            } else if (addressComponent.types.indexOf('postal_code') >= 0) {
+                                            } else if (addressComponent.types.indexOf(AddressType.postal_code) >= 0) {
                                                 emergency.zip = addressComponent.long_name;
-                                            } else if (addressComponent.types.indexOf('route') >= 0) {
+                                            } else if (addressComponent.types.indexOf(AddressType.route) >= 0) {
                                                 emergency.streetName = addressComponent.long_name;
-                                            } else if (addressComponent.types.indexOf('street_address') >= 0) {
+                                            } else if (
+                                                addressComponent.types.indexOf(AddressType.street_address) >= 0
+                                            ) {
                                                 emergency.streetNumber = addressComponent.long_name;
-                                            } else if (addressComponent.types.indexOf('country') >= 0) {
+                                            } else if (addressComponent.types.indexOf(AddressType.country) >= 0) {
                                                 emergency.country = addressComponent.long_name;
                                             }
                                         }
@@ -212,12 +222,14 @@ export class SMSController {
                             emergency.city;
                         geocoder
                             .geocode({
-                                address: address,
-                                components: { country: 'DE' },
+                                params: {
+                                    key: process.env.MAPS_API_KEY,
+                                    address: address,
+                                    components: { country: 'DE' },
+                                },
                             })
-                            .asPromise()
                             .then((response) => {
-                                const results = response.json.results;
+                                const results = response.data.results;
                                 if (results.length >= 1) {
                                     emergency.setLocationPoint(
                                         results[0].geometry.location.lat,
