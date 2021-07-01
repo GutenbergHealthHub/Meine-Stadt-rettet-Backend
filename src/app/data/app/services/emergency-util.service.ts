@@ -1,3 +1,4 @@
+import { AddressType, GeocodingAddressComponentType } from '@googlemaps/google-maps-services-js';
 /*
  * Copyright [2020] Universitätsmedizin Mainz, Gutenberg Health Hub
  *
@@ -73,31 +74,31 @@ export class EmergencyUtilService {
                         for (const component of components) {
                             const type = component.types[0];
                             switch (type) {
-                                case 'route':
+                                case AddressType.route:
                                     {
                                         emergency.streetName = !emergency.streetName
                                             ? component.long_name
                                             : emergency.streetName;
                                     }
                                     break;
-                                case 'street_number':
+                                case GeocodingAddressComponentType.street_number:
                                     {
                                         emergency.streetNumber = !emergency.streetNumber
                                             ? component.long_name
                                             : emergency.streetNumber;
                                     }
                                     break;
-                                case 'locality':
+                                case AddressType.locality:
                                     {
                                         emergency.city = !emergency.city ? component.long_name : emergency.city;
                                     }
                                     break;
-                                case 'postal_code':
+                                case AddressType.postal_code:
                                     {
                                         emergency.zip = !emergency.zip ? component.long_name : emergency.zip;
                                     }
                                     break;
-                                case 'country':
+                                case AddressType.country:
                                     {
                                         emergency.country = !emergency.country
                                             ? component.long_name

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AddressType } from '@googlemaps/google-maps-services-js';
+import { AddressType, GeocodingAddressComponentType } from '@googlemaps/google-maps-services-js';
 import {
     IncomingSMS,
     IncomingSMSProcessingListEntryResult,
@@ -193,18 +193,24 @@ export class SMSController {
                                     const results = response.data.results;
                                     if (results.length >= 1) {
                                         for (const addressComponent of results[0].address_components) {
-                                            if (addressComponent.types.indexOf(AddressType.locality) >= 0) {
-                                                emergency.city = addressComponent.long_name;
-                                            } else if (addressComponent.types.indexOf(AddressType.postal_code) >= 0) {
-                                                emergency.zip = addressComponent.long_name;
-                                            } else if (addressComponent.types.indexOf(AddressType.route) >= 0) {
-                                                emergency.streetName = addressComponent.long_name;
-                                            } else if (
-                                                addressComponent.types.indexOf(AddressType.street_address) >= 0
-                                            ) {
-                                                emergency.streetNumber = addressComponent.long_name;
-                                            } else if (addressComponent.types.indexOf(AddressType.country) >= 0) {
-                                                emergency.country = addressComponent.long_name;
+                                            for (const type in addressComponent.types) {
+                                                switch (type) {
+                                                    case AddressType.locality:
+                                                        emergency.city = addressComponent.long_name;
+                                                        break;
+                                                    case AddressType.postal_code:
+                                                        emergency.zip = addressComponent.long_name;
+                                                        break;
+                                                    case AddressType.route:
+                                                        emergency.streetName = addressComponent.long_name;
+                                                        break;
+                                                    case GeocodingAddressComponentType.street_number:
+                                                        emergency.streetNumber = addressComponent.long_name;
+                                                        break;
+                                                    case AddressType.country:
+                                                        emergency.country = addressComponent.long_name;
+                                                        break;
+                                                }
                                             }
                                         }
                                     }
