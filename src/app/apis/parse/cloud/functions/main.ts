@@ -43,22 +43,18 @@ const config = {
 // Send Emails
 // Email Templates: welcomeEmail, noDocumentEmail, noSignatureEmail
 // #########################
-Parse.Cloud.define('sendEmail', function (request, response) {
+Parse.Cloud.define('sendEmail', async (request) => {
     if (!request.params.emailTemplate) {
-        response.error('Please provide emailTemplate');
-        return;
+        throw new Error('Please provide emailTemplate');
     }
     if (!request.params.firstname) {
-        response.error('Please provide user firstname');
-        return;
+        return { eror: 'Please provide user firstname' };
     }
     if (!request.params.lastname) {
-        response.error('Please provide user lastname');
-        return;
+        return { error: 'Please provide user lastname' };
     }
     if (!request.params.link) {
-        response.error('Please provide url link');
-        return;
+        return { error: 'Please provide url link' };
     }
     const adapter = new MailgunAdapter(config);
 
@@ -74,57 +70,50 @@ Parse.Cloud.define('sendEmail', function (request, response) {
             direct: true,
         })
         .then(function () {
-            response.success('Email sent!');
+            return { success: ' Mail sent.' };
         })
         .catch(function (error) {
-            response.error('Failure: ' + error);
+            return { error: 'Failure: ' + error };
         });
 });
 
 // #########################
 // Cancel the emergency mission for a specific first responder.
 // #########################
-Parse.Cloud.define('cancelFirstResponder', function (request, response) {
+Parse.Cloud.define('cancelFirstResponder', async (request) => {
     if (!request.user) {
-        response.error('Must be signed in to call this Cloud Function.');
-        return;
+        return { error: 'Must be signed in to call this Cloud Function.' };
     }
     if (!request.params.emergencyStateId) {
-        response.error('Please indicate a valid emergency state id');
-        return;
+        return { error: 'Please indicate a valid emergency state id' };
     }
 
     const emergencyStateQuery = new Parse.Query('EmergencyState');
-    emergencyStateQuery.get(request.params.emergencyStateId).then(
-        (emergencyState: EmergencyState) => {
+    emergencyStateQuery.get(request.params.emergencyStateId, {
+        success: (emergencyState: EmergencyState) => {
             emergencyState.state = EmergencyStateEnum.calledBack;
-            emergencyState.save().then(
-                () => {
-                    const installationQuery = new Parse.Query(Parse.Installation);
-                    installationQuery.equalTo('objectId', emergencyState.installationRelation.id);
-                    sendCancelPushToFirstresponder(
-                        installationQuery,
-                        emergencyState.emergencyRelation.id,
-                        emergencyState.id,
-                        {
-                            success: function (result) {
-                                response.success(result);
-                            },
-                            error: function (error) {
-                                response.error('error 1: ' + error.message);
-                            },
+            emergencyState.save().then(() => {
+                const installationQuery = new Parse.Query(Parse.Installation);
+                installationQuery.equalTo('objectId', emergencyState.installationRelation.id);
+                sendCancelPushToFirstresponder(
+                    installationQuery,
+                    emergencyState.emergencyRelation.id,
+                    emergencyState.id,
+                    {
+                        success: function (result) {
+                            return { success: result };
                         },
-                    );
-                },
-                (error) => {
-                    response.error('error 2: ' + error.message);
-                },
-            );
+                        error: function (error) {
+                            return { error: 'error 1: ' + error.message };
+                        },
+                    },
+                );
+            });
         },
-        (error) => {
-            response.error('error 3: ' + error.message);
+        error: (err: any) => {
+            return { error: err };
         },
-    );
+    });
 });
 
 // #########################
@@ -146,11 +135,10 @@ function sendCancelPushToFirstresponder(installationQuery, emergencyId, emergenc
                 cancel: true,
             },
         },
-        // @ts-ignore
         {
             useMasterKey: true,
             // @ts-ignore
-            success: function (result) {
+            success: function (result: any) {
                 callback.success(result);
             },
             error: function (error) {
@@ -163,14 +151,12 @@ function sendCancelPushToFirstresponder(installationQuery, emergencyId, emergenc
 // #########################
 // Cancel the whole emergency for all involved first responders.
 // #########################
-Parse.Cloud.define('cancelEmergency', function (request, response) {
+Parse.Cloud.define('cancelEmergency', async (request) => {
     if (!request.user) {
-        response.error('Must be signed in to call this Cloud Function.');
-        return;
+        return { error: 'Must be signed in to call this Cloud Function.' };
     }
     if (!request.params.emergencyId) {
-        response.error('Please indicate a valid emergency id');
-        return;
+        return { error: 'Please indicate a valid emergency id' };
     }
 
     const EmergencyQuery = new Parse.Query('Emergency');
@@ -198,44 +184,46 @@ Parse.Cloud.define('cancelEmergency', function (request, response) {
                                     query.equalTo('objectId', res.get('installationRelation').id);
                                     sendCancelPushToFirstresponder(query, res.get('installationRelation').id, res.id, {
                                         success: function () {
-                                            response.success('success');
+                                            return { success: true };
                                         },
-                                        error: function (error) {
-                                            response.error(error.message);
+                                        error: function (error: any) {
+                                            return {
+                                                error: error.message,
+                                            };
                                         },
                                     });
                                 },
                                 (error) => {
-                                    response.error(error.message);
+                                    return { error: error.message };
                                 },
                             );
                         }
                     },
                     (error) => {
-                        response.error(error.message);
+                        return { error: error.message };
                     },
                 );
             },
             (error) => {
-                response.error(error.message);
+                return { error: error.message };
             },
         );
     });
 
-    response.success('null');
+    return { success: true };
 });
 
 // #########################
 // Finish the Emergency and set the emergeny state to 20 = finish
 // #########################
-Parse.Cloud.define('finishEmergency', function (request, response) {
+Parse.Cloud.define('finishEmergency', async (request) => {
     if (!request.user) {
-        response.error('Must be signed in to call this Cloud Function.');
-        return;
+        return { error: 'Must be signed in to call this Cloud Function.' };
     }
     if (!request.params.emergencyId) {
-        response.error('Please indicate a valid emergency id');
-        return;
+        {
+            return 'Please indicate a valid emergency id';
+        }
     }
     const emergencyStateQuery = new Parse.Query('EmergencyState');
     emergencyStateQuery.equalTo('emergencyRelation', request.params.emergencyId);
@@ -247,10 +235,10 @@ Parse.Cloud.define('finishEmergency', function (request, response) {
             emergency.state = count;
             emergency.save().then(
                 (result) => {
-                    response.success(result);
+                    return { success: result };
                 },
                 (err) => {
-                    response.error(err);
+                    return { error: err };
                 },
             );
         });
@@ -260,23 +248,19 @@ Parse.Cloud.define('finishEmergency', function (request, response) {
 // #########################
 // Modify or change specific associations with users like control center, contract, or certificate associations.
 // #########################
-Parse.Cloud.define('modifyUser', function (request, response) {
+Parse.Cloud.define('modifyUser', async (request) => {
     console.log('modifyUser');
     if (!request.user) {
-        response.error('Must be signed in to call this Cloud Function.');
-        return;
+        return { error: 'Must be signed in to call this Cloud Function.' };
     }
     if (!request.params.key) {
-        response.error('Please indicate a valid field to be modified');
-        return;
+        return { error: 'Please indicate a valid field to be modified' };
     }
     if (typeof request.params.input === 'undefined') {
-        response.error('Please indicate a valid value');
-        return;
+        return { error: 'Please indicate a valid value' };
     }
     if (!request.params.userid) {
-        response.error('Please indicate a valid user id');
-        return;
+        return { error: 'Please indicate a valid user id' };
     }
 
     const query = new Parse.Query(Parse.User);
@@ -289,11 +273,11 @@ Parse.Cloud.define('modifyUser', function (request, response) {
                     userObject.set(request.params.key, data);
                     userObject.save(null, {
                         useMasterKey: true,
-                        success: function (user) {
-                            response.success(user);
+                        success: function (user: any) {
+                            return { success: user };
                         },
-                        error: function (err) {
-                            response.error(err);
+                        error: function (err: any) {
+                            return { error: err };
                         },
                     });
                 });
@@ -304,11 +288,11 @@ Parse.Cloud.define('modifyUser', function (request, response) {
                     userObject.unset(request.params.key);
                     userObject.save(null, {
                         useMasterKey: true,
-                        success: function (user) {
-                            response.success(user);
+                        success: function (user: any) {
+                            return { success: user };
                         },
-                        error: function (err) {
-                            response.error(err);
+                        error: function (err: any) {
+                            return { error: err };
                         },
                     });
                 } else {
@@ -318,10 +302,10 @@ Parse.Cloud.define('modifyUser', function (request, response) {
                             userObject.save(null, {
                                 useMasterKey: true,
                                 success: function (user) {
-                                    response.success(user);
+                                    return { success: user };
                                 },
                                 error: function (err) {
-                                    response.error(err);
+                                    return { error: err };
                                 },
                             });
                         },
@@ -334,10 +318,10 @@ Parse.Cloud.define('modifyUser', function (request, response) {
                     userObject.save(null, {
                         useMasterKey: true,
                         success: function (user) {
-                            response.success(user);
+                            return { success: user };
                         },
                         error: function (err) {
-                            response.error(err);
+                            return { error: err };
                         },
                     });
                 } else {
@@ -348,10 +332,10 @@ Parse.Cloud.define('modifyUser', function (request, response) {
                             userObject.save(null, {
                                 useMasterKey: true,
                                 success: function (user) {
-                                    response.success(user);
+                                    return { success: user };
                                 },
                                 error: function (err) {
-                                    response.error(err);
+                                    return { error: err };
                                 },
                             });
                         },
@@ -368,16 +352,16 @@ Parse.Cloud.define('modifyUser', function (request, response) {
                 userObject.save(null, {
                     useMasterKey: true,
                     success: function (user) {
-                        response.success(user);
+                        return { success: user };
                     },
                     error: function (err) {
-                        response.error(err);
+                        return { error: err };
                     },
                 });
             }
         },
         error: function (err) {
-            response.error(err);
+            return { error: err };
         },
     });
 });
@@ -385,14 +369,12 @@ Parse.Cloud.define('modifyUser', function (request, response) {
 // #########################
 // Remove user with all generated and associated information from the system.
 // #########################
-Parse.Cloud.define('deleteUser', function (request, response) {
+Parse.Cloud.define('deleteUser', async (request) => {
     if (!request.user) {
-        response.error('Must be signed in to call this Cloud Function.');
-        return;
+        return { error: 'Must be signed in to call this Cloud Function.' };
     }
     if (!request.params.userId) {
-        response.error('A user ID must be provided');
-        return;
+        return { error: 'A user ID must be provided' };
     }
 
     const certificateService = ServiceManager.get(CertificateService);
@@ -411,31 +393,33 @@ Parse.Cloud.define('deleteUser', function (request, response) {
             if (user.certificateFR) user.certificateFR.destroy({ useMasterKey: true });
             user.destroy({ useMasterKey: true }).then(
                 (user) => {
-                    response.success('User successfully deleted');
+                    return { success: 'User successfully deleted' };
                 },
                 (error) => {
-                    response.error('Error in deleting user: ' + error.message);
+                    return {
+                        error: 'Error in deleting user: ' + error.message,
+                    };
                 },
             );
         },
         (error) => {
-            response.error(error.message);
+            return { error: error.message };
         },
     );
 });
 
-Parse.Cloud.define('resetUserPassword', function (request, response) {
+Parse.Cloud.define('resetUserPassword', async (request) => {
     if (!request.params.email) {
-        response.error('Missing parameter: email.');
+        return { error: 'Missing parameter: email.' };
         return;
     }
 
     Parse.User.requestPasswordReset(request.params.email, {
-        success: function (success) {
-            response.success(success);
+        success: function (success: any) {
+            return { success: success };
         },
-        error: function (error) {
-            response.error(error);
+        error: function (error: any) {
+            return { error: error };
         },
     });
 });
@@ -443,14 +427,12 @@ Parse.Cloud.define('resetUserPassword', function (request, response) {
 // #########################
 // Create test alarm for a specific user ID or installation ID
 // #########################
-Parse.Cloud.define('createTestAlarm', (request, response) => {
+Parse.Cloud.define('createTestAlarm', async (request) => {
     if (!request.user) {
-        response.error('Must be signed in to call this Cloud Function.');
-        return;
+        return { error: 'Must be signed in to call this Cloud Function.' };
     }
     if (!request.params.userId) {
-        response.error('A valid user must be provided');
-        return;
+        return { error: 'A valid user must be provided' };
     }
 
     const controlCenterService = ServiceManager.get(ControlCenterService);
@@ -481,14 +463,20 @@ Parse.Cloud.define('createTestAlarm', (request, response) => {
                         emergency.country = localization.country();
                         emergency.save().then(
                             (succ) => {
-                                response.success('Cloud createTestAlarm succeeded');
+                                return {
+                                    success: 'Cloud createTestAlarm succeeded',
+                                };
                             },
                             (error) => {
-                                response.error('Cloud createTestAlarm error: ' + error.message);
+                                return {
+                                    error: 'Cloud createTestAlarm error: ' + error.message,
+                                };
                             },
                         );
                     } else {
-                        response.error('User does not have any location');
+                        return {
+                            error: 'User does not have any location',
+                        };
                     }
                 });
             });
@@ -510,14 +498,18 @@ Parse.Cloud.define('createTestAlarm', (request, response) => {
                     emergency.country = localization.country();
                     emergency.save().then(
                         (succ) => {
-                            response.success('Cloud createTestAlarm succeeded');
+                            return {
+                                success: 'Cloud createTestAlarm succeeded',
+                            };
                         },
                         (error) => {
-                            response.error('Cloud createTestAlarm error: ' + error.message);
+                            return {
+                                error: 'Cloud createTestAlarm error: ' + error.message,
+                            };
                         },
                     );
                 } else {
-                    response.error('User does not have any location');
+                    return { error: 'User does not have any location' };
                 }
             });
         }

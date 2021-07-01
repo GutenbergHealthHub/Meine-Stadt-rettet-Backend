@@ -29,7 +29,7 @@ export abstract class TriggerHandler<T extends Parse.Object, A extends BaseModel
         serviceConstructor: new (errorService: ErrorService, parseService: ParseService) => A,
     ) {
         if (this.beforeCreate || this.beforeUpdate) {
-            Parse.Cloud.beforeSave(modelConstructor, (request, response) => {
+            Parse.Cloud.beforeSave(modelConstructor, (request) => {
                 let result = true;
 
                 const entity = request.object as T;
@@ -43,9 +43,9 @@ export abstract class TriggerHandler<T extends Parse.Object, A extends BaseModel
                 }
 
                 if (result) {
-                    response.success();
+                    //response.success();
                 } else {
-                    response.error(Parse.ErrorCode.INTERNAL_SERVER_ERROR, 'Internal Error');
+                    // response.error(Parse.ErrorCode.INTERNAL_SERVER_ERROR, 'Internal Error');
                 }
             });
         }

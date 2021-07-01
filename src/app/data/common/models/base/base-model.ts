@@ -35,7 +35,7 @@ export class BaseModel extends Parse.Object {
         }
     }
 
-    public save(): Parse.Promise<this> {
+    public save(): Promise<this> {
         for (const attrKey of Object.keys(this)) {
             if (attrKey[0] === '_' && attrKey !== '_objCount') {
                 this.set(attrKey.substr(1), this[attrKey]);

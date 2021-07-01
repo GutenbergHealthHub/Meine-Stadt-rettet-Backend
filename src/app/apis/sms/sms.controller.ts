@@ -191,7 +191,7 @@ export class SMSController {
                                                 emergency.zip = addressComponent.long_name;
                                             } else if (addressComponent.types.indexOf('route') >= 0) {
                                                 emergency.streetName = addressComponent.long_name;
-                                            } else if (addressComponent.types.indexOf('street_number') >= 0) {
+                                            } else if (addressComponent.types.indexOf('street_address') >= 0) {
                                                 emergency.streetNumber = addressComponent.long_name;
                                             } else if (addressComponent.types.indexOf('country') >= 0) {
                                                 emergency.country = addressComponent.long_name;

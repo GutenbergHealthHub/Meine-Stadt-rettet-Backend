@@ -67,14 +67,14 @@ export class BaseModelService<T extends Parse.Object> {
         if (ParseService.isParseServer()) {
             query['_find'] = query.find;
             query['_first'] = query.first;
-            query.find = (options?: Parse.Query.FindOptions): Parse.Promise<T[]> => {
+            query.find = (options?: Parse.Query.FindOptions): Promise<T[]> => {
                 options = options || {};
                 if (options.useMasterKey === undefined) {
                     options.useMasterKey = true;
                 }
                 return query['_find'](options);
             };
-            query.first = (options?: Parse.Query.FindOptions): Parse.Promise<T> => {
+            query.first = (options?: Parse.Query.FindOptions): Promise<T> => {
                 options = options || {};
                 if (options.useMasterKey === undefined) {
                     options.useMasterKey = true;

@@ -23,14 +23,14 @@ import { Observable } from 'rxjs/Observable';
 import { ErrorService } from './error.service';
 
 interface ISubscriptionDescriptor {
-    subjects: Map<number, Subject<INextState<Parse.BaseObject>>>;
+    subjects: Map<number, Subject<INextState<Parse.Object>>>;
     nextSubscriptionId: number;
-    state: Map<string, Parse.BaseObject>;
+    state: Map<string, Parse.Object>;
     subscription: any;
-    creationPromise: Promise<Map<string, Parse.BaseObject>>;
+    creationPromise: Promise<Map<string, Parse.Object>>;
 }
 
-export class Subscription<T extends Parse.BaseObject = Parse.BaseObject> {
+export class Subscription<T extends Parse.Object = Parse.Object> {
     private _token: string;
     private _observable: Observable<INextState<T>>;
     private _state: Map<string, T>;
@@ -75,7 +75,7 @@ export class Subscription<T extends Parse.BaseObject = Parse.BaseObject> {
     }
 }
 
-export interface INextState<T extends Parse.BaseObject> {
+export interface INextState<T extends Parse.Object> {
     action: string;
     state: Map<string, T>;
     objectId: number;
@@ -111,7 +111,7 @@ export class ParseService {
         return new Parse.File(fileName ? fileName : this.encodeFileName(file.name), file);
     }
 
-    public subscribe<T extends Parse.BaseObject = Parse.BaseObject>(query: Parse.Query) {
+    public subscribe<T extends Parse.Object = Parse.Object>(query: Parse.Query) {
         return new Promise<Subscription<T>>((resolve, reject) => {
             const queryId = this.getQueryId(query);
             const createSubscription = !this.subscriptions.has(queryId);
@@ -121,7 +121,7 @@ export class ParseService {
                     nextSubscriptionId: 0,
                     state: new Map(),
                     subscription: null,
-                    creationPromise: new Promise<Map<string, Parse.BaseObject>>((resolveCreation, rejectCreation) => {
+                    creationPromise: new Promise<Map<string, Parse.Object>>((resolveCreation, rejectCreation) => {
                         this.createSubscription(queryId, query).then((state) => {
                             resolveCreation(state);
                         });
@@ -165,7 +165,7 @@ export class ParseService {
         return Parse.Object.fromJSON(jsonObject, true);
     }
 
-    private createSubscription<T extends Parse.BaseObject = Parse.BaseObject>(queryID, query: Parse.Query) {
+    private createSubscription<T extends Parse.Object = Parse.Object>(queryID, query: Parse.Query) {
         return new Promise<Map<string, T>>((resolve, reject) => {
             const current = this;
             query.find({

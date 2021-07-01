@@ -66,7 +66,7 @@ export class User extends Parse.User {
     private _dutyHome: boolean;
 
     constructor() {
-        super(User.PARSE_CLASSNAME);
+        super({ classname: User.PARSE_CLASSNAME });
     }
 
     public setAttribute(attribute: string, value: any) {

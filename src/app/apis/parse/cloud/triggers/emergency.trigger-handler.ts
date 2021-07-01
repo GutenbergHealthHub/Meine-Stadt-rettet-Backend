@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 /*
  * Copyright [2020] Universitätsmedizin Mainz, Gutenberg Health Hub
  *
@@ -23,7 +24,7 @@ import {
     Installation,
     InstallationDeviceEnum,
 } from 'app/data/models';
-import { EmergencyUtilService, Parse, PushService, ServiceManager } from 'app/data/services';
+import { EmergencyUtilService, PushService, ServiceManager } from 'app/data/services';
 import {
     ConfigurationService,
     ControlCenterService,
@@ -68,7 +69,7 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
                     // otherwise get all firstresponders who are within the configured radius.
                     if (emergency.testEmergencySendBy) {
                         this.installationService.getLatestOfUser(emergency.testEmergencySendBy).then((installation) => {
-                            resolve(new Set().add(installation));
+                            resolve(new Set<Installation>().add(installation));
                         });
                     } else {
                         this.installationService
@@ -144,7 +145,7 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
                     // ToDO: calculate nearest firstresponder to AED
                     isAEDFirstresponder = this.calculateNearestFirstresponderToAED(filteredReceivers);
                 }
-                const createStatePromisses = new Array<Parse.Promise<EmergencyState>>();
+                const createStatePromisses = new Array<Promise<EmergencyState>>();
                 let aedFirstresponder: boolean;
                 // iterate through all device installations and notify device owners (firstresponders)
                 for (const installation of filteredReceivers) {
@@ -215,7 +216,7 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
                     createStatePromisses.push(promise);
                 }
 
-                await Parse.Promise.when(createStatePromisses);
+                await Promise.all(createStatePromisses);
                 // renotify firstresponders. This is a workaround especially for iOS devices, as automated repeated notifications is not working in iOS.
                 this.reNotifyUsersInInterval(emergency, configuration);
             } else {
@@ -249,7 +250,7 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
     private reNotifyUsersInInterval(emergency: Emergency, configuration: Configuration, i = 0) {
         new Promise((resolve, reject) => {
             setTimeout(() => {
-                const promisses = [new Parse.Promise()];
+                const promisses: Promise<Installation>[] = [];
                 const emergencyStateQuery = this.emergencyStateService.createQuery();
                 emergencyStateQuery.lessThan('state', 2);
                 emergencyStateQuery.equalTo('emergencyRelation', emergency);
@@ -292,9 +293,9 @@ class EmergencyTriggerHandler extends TriggerHandler<Emergency, EmergencyService
                         });
                     }
                 });
-                promisses[0].resolve(0);
-                Parse.Promise.when(promisses).then(() => {
-                    resolve();
+                promisses[0].then();
+                Promise.all(promisses).then((Installation) => {
+                    resolve(0);
                 });
             }, 7000);
         }).then(() => {

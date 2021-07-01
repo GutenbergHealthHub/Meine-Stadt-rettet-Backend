@@ -75,7 +75,7 @@ export class EmergencyUtilService {
                                                     : emergency.streetName;
                                             }
                                             break;
-                                        case 'street_number':
+                                        case 'street_address':
                                             {
                                                 emergency.streetNumber = !emergency.streetNumber
                                                     ? component.long_name

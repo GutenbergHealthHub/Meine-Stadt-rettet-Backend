@@ -35,7 +35,7 @@ export class Installation extends Parse.Installation {
     private _deviceType: InstallationDeviceEnum;
 
     constructor() {
-        super(Installation.PARSE_CLASSNAME);
+        super();
     }
 
     public get parseVersion(): string {
@@ -86,7 +86,7 @@ export class Installation extends Parse.Installation {
         this._deviceType = value;
     }
 
-    public save(): Parse.Promise<this> {
+    public save(): Promise<this> {
         for (const attrKey of Object.keys(this)) {
             if (attrKey[0] === '_' && attrKey !== '_objCount') {
                 this.set(attrKey.substr(1), this[attrKey]);

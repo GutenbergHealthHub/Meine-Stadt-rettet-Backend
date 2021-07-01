@@ -94,7 +94,7 @@ export class PushService {
                 },
                 {
                     useMasterKey: true,
-                    success: () => resolve(),
+                    success: () => resolve(0),
                     error: (error) => reject(error),
                 },
             );
