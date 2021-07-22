@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { BaseModelService } from 'app/data/common/modelservices/base/base-modelservice';
-import { ErrorService, ParseService, ServiceManager } from 'app/data/services';
+import { BaseModelService } from '../../../../../data/common/modelservices/base/base-modelservice';
+import { ErrorService, ParseService, ServiceManager } from '../../../../../data/services';
 
 export abstract class TriggerHandler<T extends Parse.Object, A extends BaseModelService<T>> {
     public static register<T extends TriggerHandler<Parse.Object, BaseModelService<Parse.Object>>>(

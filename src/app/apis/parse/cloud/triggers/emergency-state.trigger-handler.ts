@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Emergency, EmergencyEnum, EmergencyState, EmergencyStateEnum } from 'app/data/models';
-import { Parse, ServiceManager } from 'app/data/services';
-import { EmergencyService, EmergencyStateService } from 'app/data/modelservices';
+import { Emergency, EmergencyEnum, EmergencyState, EmergencyStateEnum } from '../../../../data/models';
+import { Parse, ServiceManager } from '../../../../data/services';
+import { EmergencyService, EmergencyStateService } from '../../../../data/modelservices';
 import { TriggerHandler } from './base/trigger-handler';
 
 // State change trigger for Emergency and EmergencyState classes. Trigger updates or creates timestamps for every state change.

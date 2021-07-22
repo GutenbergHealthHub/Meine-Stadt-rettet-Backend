@@ -21,9 +21,9 @@ import {
     IncomingSMSProcessingListEntry,
     Emergency,
     EmergencyEnum,
-} from 'app/data/models';
-import { ControlCenterService } from 'app/data/modelservices';
-import { ServiceManager, GoogleMapsService } from 'app/data/services';
+} from '../../data/models';
+import { ControlCenterService } from '../../data/modelservices';
+import { ServiceManager, GoogleMapsService } from '../../data/services';
 
 export class SMSController {
     private controlCenterService = ServiceManager.get(ControlCenterService);

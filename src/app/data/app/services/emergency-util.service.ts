@@ -19,7 +19,7 @@ import { AddressType, GeocodingAddressComponentType } from '@googlemaps/google-m
 
 import { GoogleMapsService } from './google-maps.service';
 import { ServiceManager } from './service-manager';
-import { Emergency } from 'app/data/models';
+import { Emergency } from '../../../data/models';
 
 export class EmergencyUtilService {
     private googleMapsService = ServiceManager.get(GoogleMapsService);

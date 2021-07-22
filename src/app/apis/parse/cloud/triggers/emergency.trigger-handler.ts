@@ -1,4 +1,3 @@
-import { resolve } from 'path';
 /*
  * Copyright [2020] Universitätsmedizin Mainz, Gutenberg Health Hub
  *
@@ -23,8 +22,8 @@ import {
     EmergencyTaskEnum,
     Installation,
     InstallationDeviceEnum,
-} from 'app/data/models';
-import { EmergencyUtilService, PushService, ServiceManager } from 'app/data/services';
+} from '../../../../data/models';
+import { EmergencyUtilService, PushService, ServiceManager } from '../../../../data/services';
 import {
     ConfigurationService,
     ControlCenterService,
@@ -32,7 +31,7 @@ import {
     EmergencyStateService,
     InstallationService,
     UserService,
-} from 'app/data/modelservices';
+} from '../../../../data/modelservices';
 import { TriggerHandler } from './base/trigger-handler';
 
 // Main class for sending emergency to nearest firstresponders.

@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-import { CertificateService, ControlCenterService, InstallationService, UserService } from 'app/data/modelservices';
-import { Certificate, Emergency, EmergencyEnum, EmergencyState, EmergencyStateEnum, User } from 'app/data/models';
-import { ServiceManager } from 'app/data/services';
+import {
+    CertificateService,
+    ControlCenterService,
+    InstallationService,
+    UserService,
+} from '../../../../data/modelservices';
+import { Emergency, EmergencyEnum, EmergencyState, EmergencyStateEnum, User } from '../../../../data/models';
+import { ServiceManager } from '../../../../data/services';
 import { Localization } from '../../../../data/common/models';
 
 const gk = require('./gk2wgs.js');
@@ -159,9 +164,9 @@ Parse.Cloud.define('cancelEmergency', async (request) => {
         return { error: 'Please indicate a valid emergency id' };
     }
 
-    const EmergencyQuery = new Parse.Query('Emergency');
+    const EmergencyQuery = new Parse.Query<Emergency>('Emergency');
     let length = 0;
-    const emergencyStateQuery = new Parse.Query('EmergencyState');
+    const emergencyStateQuery = new Parse.Query<EmergencyState>('EmergencyState');
     EmergencyQuery.get(request.params.emergencyId).then((emergency: Emergency) => {
         emergency.state = 12;
         emergency.save().then(
@@ -230,7 +235,7 @@ Parse.Cloud.define('finishEmergency', async (request) => {
     emergencyStateQuery.greaterThan('state', 2);
     emergencyStateQuery.count().then(function (cnt) {
         const count = cnt > 0 ? 20 : 21;
-        const EmergencyQuery = new Parse.Query('Emergency');
+        const EmergencyQuery = new Parse.Query<Emergency>('Emergency');
         EmergencyQuery.get(request.params.emergencyId).then((emergency: Emergency) => {
             emergency.state = count;
             emergency.save().then(

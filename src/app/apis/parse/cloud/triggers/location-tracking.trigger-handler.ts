@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { EmergencyStateEnum, LocationTracking } from 'app/data/models';
-import { ServiceManager, GoogleMapsService } from 'app/data/services';
-import { EmergencyStateService, LocationTrackingService } from 'app/data/modelservices';
+import { EmergencyStateEnum, LocationTracking } from '../../../../data/models';
+import { ServiceManager, GoogleMapsService } from '../../../../data/services';
+import { EmergencyStateService, LocationTrackingService } from '../../../../data/modelservices';
 import { TriggerHandler } from './base/trigger-handler';
 import { TravelMode } from '@googlemaps/google-maps-services-js';
 

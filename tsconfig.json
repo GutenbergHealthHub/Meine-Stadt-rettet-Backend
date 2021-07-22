@@ -7,17 +7,8 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
-        "baseUrl": "src",
         "experimentalDecorators": true,
-        "rootDir": "src",
-        "paths": {
-            "*": [
-                "../node_modules/*",
-                "*"
-            ]
-        }
+        "rootDir": "src"
     },
-    "include": [
-        "src/**/*"
-    ]
+    "include": ["src/**/*"]
 }

@@ -18,8 +18,7 @@ import { environment } from '../../common-imports';
 import { Injectable } from '@angular/core';
 import { Parse } from '../../common-imports';
 export { Parse };
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
+import { Subject, Observable } from 'rxjs';
 import { ErrorService } from './error.service';
 
 interface ISubscriptionDescriptor {

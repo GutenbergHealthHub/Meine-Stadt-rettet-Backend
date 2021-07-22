@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Configuration, EmergencyState, Installation } from 'app/data/models';
-import { ConfigurationService } from 'app/data/common/modelservices';
+import { Configuration, EmergencyState, Installation } from '../../../data/models';
+import { ConfigurationService } from '../../../data/common/modelservices';
 import { ServiceManager } from './service-manager';
 import { Localization } from '../../common/models/localization';
 
