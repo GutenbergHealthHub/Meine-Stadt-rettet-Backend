@@ -18,7 +18,7 @@
     },
     "scripts": {
         "prepare": "husky install",
-        "start": "npm run serve",
+        "start": "NODE_ENV=dev npm run serve",
         "build": "npm run build-ts && npm run copy-static-assets",
         "serve": "node dist/app/server.js",
         "start-complete": "npm run build && npm run serve-prod",

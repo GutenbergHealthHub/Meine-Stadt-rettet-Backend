@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-import * as fs from 'fs';
+import * as appModulePath from 'app-module-path';
+appModulePath.addPath('__dirname' + '/..');
+import * as dotenv from 'dotenv';
+if (process.env.NODE_ENV === 'dev') {
+    dotenv.config({ path: __dirname + '/../environments/localhost.env' });
+} else {
+    dotenv.config({ path: __dirname + '/../environments/production.env' });
+}
 
-require('app-module-path').addPath(__dirname + '/..');
-require('dotenv').config({ path: __dirname + '/../environments/production.env' });
 import errorHandler from 'errorhandler';
 import app from './app';
 import { ParseAPI } from './apis';
