@@ -18,7 +18,6 @@ import express from 'express';
 import { ParseAPI } from './apis';
 
 import path from 'path';
-import bodyParser from 'body-parser';
 
 const databaseUri = process.env.DATABASE_URI || process.env.MONGOLAB_URI;
 
@@ -33,8 +32,8 @@ if (!databaseUri) {
 const app = express();
 
 // Here we are configuring express to use body-parser as middle-ware.
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Serve static assets from the /public folder
 app.use('/public', express.static(path.join(__dirname, '/public')));
