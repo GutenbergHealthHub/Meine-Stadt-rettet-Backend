@@ -22,7 +22,7 @@
         "build": "npm run build-ts && npm run copy-static-assets",
         "serve": "node dist/app/server.js",
         "start-complete": "npm run build && npm run serve-prod",
-        "watch-node": "nodemon dist/app/server.js",
+        "watch-node": "NODE_ENV=dev nodemon dist/app/server.js",
         "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\"  \"npm run watch-ts\" \"npm run watch-node\"",
         "watch-test": "npm run test -- --watchAll",
         "build-ts": "tsc",
