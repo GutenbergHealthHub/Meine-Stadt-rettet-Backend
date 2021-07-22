@@ -25,8 +25,7 @@ if (process.env.NODE_ENV === 'dev') {
 
 import errorHandler from 'errorhandler';
 import app from './app';
-import { ParseAPI } from './apis';
-import { resolve } from 'path';
+import * as http from 'http';
 
 // declare var Parse;
 /**
@@ -52,7 +51,7 @@ if (process.env.PROD === 'true') {
     */
 } else {
     const port = process.env.PORT || 1337;
-    const server = require('http').Server(app);
+    const server = new http.Server(app);
     server.listen(port, () => {
         console.log('Server running on port ' + port + '.');
         app.emit('HTTP_SERVER_LISTENS', server);
