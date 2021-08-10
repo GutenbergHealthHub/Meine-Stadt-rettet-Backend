@@ -1,0 +1,9 @@
+{
+    "name": "parse-dashboard-container",
+    "scripts": {
+        "start": "parse-dashboard --dev --config parse-dashboard-config.json"
+    },
+    "dependencies": {
+        "parse-dashboard": "^2.1.0"
+    }
+}
