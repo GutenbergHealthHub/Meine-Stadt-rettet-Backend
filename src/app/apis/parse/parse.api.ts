@@ -25,13 +25,13 @@ export class ParseAPI extends BaseAPI {
 
         // This will enable the Live Query real-time server
         app.on('HTTP_SERVER_LISTENS', (server) => {
-            const liveQueryServer = ParseServer.createLiveQueryServer(server);
+            ParseServer.createLiveQueryServer(server);
             console.log('Parse LiveQuery Server started');
         });
     }
 
     // Initialize Parse Server and setup all required configuration fields.
-    protected createHandler() {
+    protected createHandler(): ParseServer {
         return new ParseServer({
             databaseURI: process.env.MONGOLAB_URI,
             cloud: __dirname + '/cloud/cloud.js',
