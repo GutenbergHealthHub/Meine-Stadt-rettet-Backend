@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "command": "npm run watch-node",
+            "command": "npm run dev:src",
             "name": "Run watch-node",
             "request": "launch",
             "type": "node-terminal"
