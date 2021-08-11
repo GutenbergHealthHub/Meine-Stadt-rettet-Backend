@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { BaseModel, Parse } from './base';
+import { BaseModel } from './base';
 import {
     ProtocolAgeCategoryEnum,
     ProtocolSexEnum,
@@ -29,8 +29,6 @@ import {
     ProtocolProducerDefiEnum,
     ProtocolEndRespirationEnum,
     ProtocolAgeCategoryEnumText,
-} from './transient';
-import {
     ProtocolSexEnumText,
     ProtocolReanimationEnumText,
     ProtocolStartLocationEnumText,
@@ -94,11 +92,27 @@ export class Protocol extends BaseModel {
     }
 
     /**
+     * Setter startLaterRelAmbulance
+     * @param {boolean} value
+     */
+    public set startLaterRelAmbulance(value: boolean) {
+        this._startLaterRelAmbulance = value;
+    }
+
+    /**
      * Getter startMinutesRelAmbulance
      * @return {number}
      */
     public get startMinutesRelAmbulance(): number {
         return this._startMinutesRelAmbulance;
+    }
+
+    /**
+     * Setter startMinutesRelAmbulance
+     * @param {number} value
+     */
+    public set startMinutesRelAmbulance(value: number) {
+        this._startMinutesRelAmbulance = value;
     }
 
     /**
@@ -110,11 +124,27 @@ export class Protocol extends BaseModel {
     }
 
     /**
+     * Setter age
+     * @param {number} value
+     */
+    public set age(value: number) {
+        this._age = value;
+    }
+
+    /**
      * Getter ageCategory
      * @return {ProtocolAgeCategoryEnum}
      */
     public get ageCategory(): ProtocolAgeCategoryEnum {
         return this._ageCategory;
+    }
+
+    /**
+     * Setter ageCategory
+     * @param {ProtocolAgeCategoryEnum} value
+     */
+    public set ageCategory(value: ProtocolAgeCategoryEnum) {
+        this._ageCategory = value;
     }
 
     public get ageCategoryText(): string {
@@ -129,8 +159,24 @@ export class Protocol extends BaseModel {
         return this._sex;
     }
 
+    /**
+     * Setter sex
+     * @param {ProtocolSexEnum} value
+     */
+    public set sex(value: ProtocolSexEnum) {
+        this._sex = value;
+    }
+
     public get sexText(): string {
         return ProtocolSexEnumText.get(this.sex);
+    }
+
+    /**
+     * Setter reanimationValue
+     * @param {ProtocolReanimationEnum} value
+     */
+    public set reanimationValue(value: ProtocolReanimationEnum) {
+        this._reanimationValue = value;
     }
 
     /**
@@ -141,16 +187,24 @@ export class Protocol extends BaseModel {
         return this._reanimationValue;
     }
 
-    public get reanimationText(): string {
-        return ProtocolReanimationEnumText.get(this.reanimationValue);
-    }
-
     /**
      * Getter startLocationValueN
      * @return {ProtocolStartLocationEnum}
      */
     public get startLocationValueN(): ProtocolStartLocationEnum {
         return this._startLocationValueN;
+    }
+
+    /**
+     * Setter startLocationValueN
+     * @param {ProtocolStartLocationEnum} value
+     */
+    public set startLocationValueN(value: ProtocolStartLocationEnum) {
+        this._startLocationValueN = value;
+    }
+
+    public get reanimationText(): string {
+        return ProtocolReanimationEnumText.get(this.reanimationValue);
     }
 
     public get startLocationText(): string {
@@ -173,6 +227,14 @@ export class Protocol extends BaseModel {
         return this._startReactionValue;
     }
 
+    /**
+     * Setter startReactionValue
+     * @param {Array<ProtocolReactionEnum>} value
+     */
+    public set startReactionValue(value: Array<ProtocolReactionEnum>) {
+        this._startReactionValue = value;
+    }
+
     public get startReactionText(): string {
         const texts = new Array<string>();
         if (this.startReactionValue) {
@@ -189,6 +251,14 @@ export class Protocol extends BaseModel {
      */
     public get startRespirationValue(): Array<ProtocolStartRespirationEnum> {
         return this._startRespirationValue;
+    }
+
+    /**
+     * Setter startRespirationValue
+     * @param {Array<ProtocolStartRespirationEnum>} value
+     */
+    public set startRespirationValue(value: Array<ProtocolStartRespirationEnum>) {
+        this._startRespirationValue = value;
     }
 
     public get startRespirationText(): string {
@@ -209,6 +279,14 @@ export class Protocol extends BaseModel {
         return this._startDiagnoseValue;
     }
 
+    /**
+     * Setter startDiagnoseValue
+     * @param {Array<ProtocolStartDiagnoseEnum>} value
+     */
+    public set startDiagnoseValue(value: Array<ProtocolStartDiagnoseEnum>) {
+        this._startDiagnoseValue = value;
+    }
+
     public get startDiagnoseText(): string {
         const texts = new Array<string>();
         if (this.startDiagnoseValue) {
@@ -227,6 +305,14 @@ export class Protocol extends BaseModel {
         return this._startOrientationValueN;
     }
 
+    /**
+     * Setter startOrientationValueN
+     * @param {ProtocolStartOrientationEnum} value
+     */
+    public set startOrientationValueN(value: ProtocolStartOrientationEnum) {
+        this._startOrientationValueN = value;
+    }
+
     public get startOrientationText(): string {
         return ProtocolStartOrientationEnumText.get(this.startOrientationValueN);
     }
@@ -240,11 +326,27 @@ export class Protocol extends BaseModel {
     }
 
     /**
+     * Setter relationWithSport
+     * @param {boolean} value
+     */
+    public set relationWithSport(value: boolean) {
+        this._relationWithSport = value;
+    }
+
+    /**
      * Getter collapseObserved
      * @return {ProtocolMeasureExecutorEnum}
      */
     public get collapseObserved(): ProtocolMeasureExecutorEnum {
         return this._collapseObserved;
+    }
+
+    /**
+     * Setter collapseObserved
+     * @param {ProtocolMeasureExecutorEnum} value
+     */
+    public set collapseObserved(value: ProtocolMeasureExecutorEnum) {
+        this._collapseObserved = value;
     }
 
     public get collapseObservedText(): string {
@@ -259,6 +361,14 @@ export class Protocol extends BaseModel {
         return this._measureChestCompressionValueN;
     }
 
+    /**
+     * Setter measureChestCompressionValueN
+     * @param {ProtocolMeasureExecutorEnum} value
+     */
+    public set measureChestCompressionValueN(value: ProtocolMeasureExecutorEnum) {
+        this._measureChestCompressionValueN = value;
+    }
+
     public get measureChestCompressionText(): string {
         return ProtocolMeasureExecutorEnumText.get(this.measureChestCompressionValueN);
     }
@@ -269,6 +379,14 @@ export class Protocol extends BaseModel {
      */
     public get measureRespirationValue(): ProtocolMeasureExecutorEnum {
         return this._measureRespirationValue;
+    }
+
+    /**
+     * Setter measureRespirationValue
+     * @param {ProtocolMeasureExecutorEnum} value
+     */
+    public set measureRespirationValue(value: ProtocolMeasureExecutorEnum) {
+        this._measureRespirationValue = value;
     }
 
     public get measureRespirationText(): string {
@@ -284,11 +402,27 @@ export class Protocol extends BaseModel {
     }
 
     /**
+     * Setter telemedicin
+     * @param {boolean} value
+     */
+    public set telemedicin(value: boolean) {
+        this._telemedicin = value;
+    }
+
+    /**
      * Getter measureDefiValueN
      * @return {ProtocolMeasureExecutorEnum}
      */
     public get measureDefiValueN(): ProtocolMeasureExecutorEnum {
         return this._measureDefiValueN;
+    }
+
+    /**
+     * Setter measureDefiValueN
+     * @param {ProtocolMeasureExecutorEnum} value
+     */
+    public set measureDefiValueN(value: ProtocolMeasureExecutorEnum) {
+        this._measureDefiValueN = value;
     }
 
     public get measureDefiText(): string {
@@ -303,6 +437,14 @@ export class Protocol extends BaseModel {
         return this._measureDefiShockCount;
     }
 
+    /**
+     * Setter measureDefiShockCount
+     * @param {ProtocolMeasureDefiShockEnum} value
+     */
+    public set measureDefiShockCount(value: ProtocolMeasureDefiShockEnum) {
+        this._measureDefiShockCount = value;
+    }
+
     public get measureDefiShockCountText(): string {
         return ProtocolMeasureDefiShockEnumText.get(this.measureDefiShockCount);
     }
@@ -313,6 +455,14 @@ export class Protocol extends BaseModel {
      */
     public get producerDefiValue(): ProtocolProducerDefiEnum {
         return this._producerDefiValue;
+    }
+
+    /**
+     * Setter producerDefiValue
+     * @param {ProtocolProducerDefiEnum} value
+     */
+    public set producerDefiValue(value: ProtocolProducerDefiEnum) {
+        this._producerDefiValue = value;
     }
 
     public get producerDefiText(): string {
@@ -328,6 +478,14 @@ export class Protocol extends BaseModel {
     }
 
     /**
+     * Setter codeDefiValue
+     * @param {number} value
+     */
+    public set codeDefiValue(value: number) {
+        this._codeDefiValue = value;
+    }
+
+    /**
      * Getter publicDefi
      * @return {boolean}
      */
@@ -336,11 +494,27 @@ export class Protocol extends BaseModel {
     }
 
     /**
+     * Setter publicDefi
+     * @param {boolean} value
+     */
+    public set publicDefi(value: boolean) {
+        this._publicDefi = value;
+    }
+
+    /**
      * Getter endStatusA
      * @return {Array<ProtocolReactionEnum>}
      */
     public get endStatusA(): Array<ProtocolReactionEnum> {
         return this._endStatusA;
+    }
+
+    /**
+     * Setter endStatusA
+     * @param {Array<ProtocolReactionEnum>} value
+     */
+    public set endStatusA(value: Array<ProtocolReactionEnum>) {
+        this._endStatusA = value;
     }
 
     public get endStatusAText(): string {
@@ -359,6 +533,14 @@ export class Protocol extends BaseModel {
      */
     public get endRespirationValue(): Array<ProtocolEndRespirationEnum> {
         return this._endRespirationValue;
+    }
+
+    /**
+     * Setter endRespirationValue
+     * @param {Array<ProtocolEndRespirationEnum>} value
+     */
+    public set endRespirationValue(value: Array<ProtocolEndRespirationEnum>) {
+        this._endRespirationValue = value;
     }
 
     public get endRespirationText(): string {
@@ -380,214 +562,6 @@ export class Protocol extends BaseModel {
     }
 
     /**
-     * Getter cancelComment
-     * @return {string}
-     */
-    public get cancelComment(): string {
-        return this._cancelComment;
-    }
-
-    /**
-     * Getter done
-     * @return {boolean}
-     */
-    public get done(): boolean {
-        return this._done;
-    }
-
-    /**
-     * Setter startLaterRelAmbulance
-     * @param {boolean} value
-     */
-    public set startLaterRelAmbulance(value: boolean) {
-        this._startLaterRelAmbulance = value;
-    }
-
-    /**
-     * Setter startMinutesRelAmbulance
-     * @param {number} value
-     */
-    public set startMinutesRelAmbulance(value: number) {
-        this._startMinutesRelAmbulance = value;
-    }
-
-    /**
-     * Setter age
-     * @param {number} value
-     */
-    public set age(value: number) {
-        this._age = value;
-    }
-
-    /**
-     * Setter ageCategory
-     * @param {ProtocolAgeCategoryEnum} value
-     */
-    public set ageCategory(value: ProtocolAgeCategoryEnum) {
-        this._ageCategory = value;
-    }
-
-    /**
-     * Setter sex
-     * @param {ProtocolSexEnum} value
-     */
-    public set sex(value: ProtocolSexEnum) {
-        this._sex = value;
-    }
-
-    /**
-     * Setter reanimationValue
-     * @param {ProtocolReanimationEnum} value
-     */
-    public set reanimationValue(value: ProtocolReanimationEnum) {
-        this._reanimationValue = value;
-    }
-
-    /**
-     * Setter startLocationValueN
-     * @param {ProtocolStartLocationEnum} value
-     */
-    public set startLocationValueN(value: ProtocolStartLocationEnum) {
-        this._startLocationValueN = value;
-    }
-
-    /**
-     * Setter schoolBuilding
-     * @param {boolean} value
-     */
-    public set schoolBuilding(value: boolean) {
-        this._schoolBuilding = value;
-    }
-
-    /**
-     * Setter startReactionValue
-     * @param {Array<ProtocolReactionEnum>} value
-     */
-    public set startReactionValue(value: Array<ProtocolReactionEnum>) {
-        this._startReactionValue = value;
-    }
-
-    /**
-     * Setter startRespirationValue
-     * @param {Array<ProtocolStartRespirationEnum>} value
-     */
-    public set startRespirationValue(value: Array<ProtocolStartRespirationEnum>) {
-        this._startRespirationValue = value;
-    }
-
-    /**
-     * Setter startDiagnoseValue
-     * @param {Array<ProtocolStartDiagnoseEnum>} value
-     */
-    public set startDiagnoseValue(value: Array<ProtocolStartDiagnoseEnum>) {
-        this._startDiagnoseValue = value;
-    }
-
-    /**
-     * Setter startOrientationValueN
-     * @param {ProtocolStartOrientationEnum} value
-     */
-    public set startOrientationValueN(value: ProtocolStartOrientationEnum) {
-        this._startOrientationValueN = value;
-    }
-
-    /**
-     * Setter relationWithSport
-     * @param {boolean} value
-     */
-    public set relationWithSport(value: boolean) {
-        this._relationWithSport = value;
-    }
-
-    /**
-     * Setter collapseObserved
-     * @param {ProtocolMeasureExecutorEnum} value
-     */
-    public set collapseObserved(value: ProtocolMeasureExecutorEnum) {
-        this._collapseObserved = value;
-    }
-
-    /**
-     * Setter measureChestCompressionValueN
-     * @param {ProtocolMeasureExecutorEnum} value
-     */
-    public set measureChestCompressionValueN(value: ProtocolMeasureExecutorEnum) {
-        this._measureChestCompressionValueN = value;
-    }
-
-    /**
-     * Setter measureRespirationValue
-     * @param {ProtocolMeasureExecutorEnum} value
-     */
-    public set measureRespirationValue(value: ProtocolMeasureExecutorEnum) {
-        this._measureRespirationValue = value;
-    }
-
-    /**
-     * Setter telemedicin
-     * @param {boolean} value
-     */
-    public set telemedicin(value: boolean) {
-        this._telemedicin = value;
-    }
-
-    /**
-     * Setter measureDefiValueN
-     * @param {ProtocolMeasureExecutorEnum} value
-     */
-    public set measureDefiValueN(value: ProtocolMeasureExecutorEnum) {
-        this._measureDefiValueN = value;
-    }
-
-    /**
-     * Setter measureDefiShockCount
-     * @param {ProtocolMeasureDefiShockEnum} value
-     */
-    public set measureDefiShockCount(value: ProtocolMeasureDefiShockEnum) {
-        this._measureDefiShockCount = value;
-    }
-
-    /**
-     * Setter producerDefiValue
-     * @param {ProtocolProducerDefiEnum} value
-     */
-    public set producerDefiValue(value: ProtocolProducerDefiEnum) {
-        this._producerDefiValue = value;
-    }
-
-    /**
-     * Setter codeDefiValue
-     * @param {number} value
-     */
-    public set codeDefiValue(value: number) {
-        this._codeDefiValue = value;
-    }
-
-    /**
-     * Setter publicDefi
-     * @param {boolean} value
-     */
-    public set publicDefi(value: boolean) {
-        this._publicDefi = value;
-    }
-
-    /**
-     * Setter endStatusA
-     * @param {Array<ProtocolReactionEnum>} value
-     */
-    public set endStatusA(value: Array<ProtocolReactionEnum>) {
-        this._endStatusA = value;
-    }
-
-    /**
-     * Setter endRespirationValue
-     * @param {Array<ProtocolEndRespirationEnum>} value
-     */
-    public set endRespirationValue(value: Array<ProtocolEndRespirationEnum>) {
-        this._endRespirationValue = value;
-    }
-
-    /**
      * Setter endComment
      * @param {string} value
      */
@@ -596,11 +570,26 @@ export class Protocol extends BaseModel {
     }
 
     /**
+     * Getter cancelComment
+     * @return {string}
+     */
+    public get cancelComment(): string {
+        return this._cancelComment;
+    }
+    /**
      * Setter cancelComment
      * @param {string} value
      */
     public set cancelComment(value: string) {
         this._cancelComment = value;
+    }
+
+    /**
+     * Getter done
+     * @return {boolean}
+     */
+    public get done(): boolean {
+        return this._done;
     }
 
     /**
@@ -620,43 +609,19 @@ export class Protocol extends BaseModel {
     }
 
     /**
-     * Getter callDiagnose
-     * @return {string}
-     */
-    public get callDiagnose(): string {
-        return this._callDiagnose;
-    }
-
-    /**
-     * Getter callErgonomie
-     * @return {string}
-     */
-    public get callErgonomie(): string {
-        return this._callErgonomie;
-    }
-
-    /**
-     * Getter callUserCondition
-     * @return {string}
-     */
-    public get callUserCondition(): string {
-        return this._callUserCondition;
-    }
-
-    /**
-     * Getter callOthers
-     * @return {string}
-     */
-    public get callOthers(): string {
-        return this._callOthers;
-    }
-
-    /**
      * Setter userbasedDataRemoved
      * @param {boolean} value
      */
     public set userbasedDataRemoved(value: boolean) {
         this._userbasedDataRemoved = value;
+    }
+
+    /**
+     * Getter callDiagnose
+     * @return {string}
+     */
+    public get callDiagnose(): string {
+        return this._callDiagnose;
     }
 
     /**
@@ -668,6 +633,14 @@ export class Protocol extends BaseModel {
     }
 
     /**
+     * Getter callErgonomie
+     * @return {string}
+     */
+    public get callErgonomie(): string {
+        return this._callErgonomie;
+    }
+
+    /**
      * Setter callErgonomie
      * @param {string} value
      */
@@ -676,11 +649,27 @@ export class Protocol extends BaseModel {
     }
 
     /**
+     * Getter callUserCondition
+     * @return {string}
+     */
+    public get callUserCondition(): string {
+        return this._callUserCondition;
+    }
+
+    /**
      * Setter callUserCondition
      * @param {string} value
      */
     public set callUserCondition(value: string) {
         this._callUserCondition = value;
+    }
+
+    /**
+     * Getter callOthers
+     * @return {string}
+     */
+    public get callOthers(): string {
+        return this._callOthers;
     }
 
     /**
