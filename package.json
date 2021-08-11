@@ -7,8 +7,8 @@
         "node": ">= 8.0.0"
     },
     "lint-staged": {
-        "*.{js,ts,tsx}": [
-            "eslint . --fix"
+        "*.{js,ts}": [
+            "eslint --fix"
         ],
         "*.js": "eslint --cache --fix"
     },
