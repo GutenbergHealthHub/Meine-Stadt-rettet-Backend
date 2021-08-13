@@ -21,7 +21,7 @@
         "copy:static": "ts-node tools/copyStaticAssets.ts",
         "dev:dist": "npm run build:dev && set NODE_ENV=dev&& node --inspect dist/app/server.js",
         "dev:src": "npm run build:dev && nodemon --watch src -e ts,html,css,png,txt --exec npm run dev:dist",
-        "parse-dashboard:build": "docker build -t parse-dashboard .",
+        "parse-dashboard:build": "docker build -t parse-dashboard ./parse-dashboard",
         "parse-dashboard:run": "docker run -p 4040:4040/tcp --name parse-dashboard parse-dashboard",
         "eslint": "./node_modules/.bin/eslint '**/*.{js,ts,tsx}'",
         "eslint:fix": "./node_modules/.bin/eslint '**/*.{js,ts,tsx}' --fix",
