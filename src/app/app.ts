@@ -19,12 +19,6 @@ import { ParseAPI } from './apis';
 
 import path from 'path';
 
-const databaseUri = process.env.DATABASE_URI || process.env.MONGOLAB_URI;
-
-if (!databaseUri) {
-    console.log('DATABASE_URI not specified, falling back to localhost.');
-}
-
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
 // If you wish you require them, you can set them as options in the initialization above:
 // javascriptKey, restAPIKey, dotNetKey, clientKey

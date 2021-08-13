@@ -33,14 +33,14 @@ export class ParseAPI extends BaseAPI {
     // Initialize Parse Server and setup all required configuration fields.
     protected createHandler(): ParseServer {
         return new ParseServer({
-            databaseURI: process.env.MONGOLAB_URI,
+            databaseURI: process.env.MONGODB_URI,
             cloud: __dirname + '/cloud/cloud.js',
             appId: process.env.APP_ID,
             masterKey: process.env.MASTER_KEY, // Add your master key here. Keep it secret!
             restAPIKey: process.env.REST_API_KEY,
             javascriptKey: process.env.JAVASCRIPT_KEY,
             clientKey: process.env.CLIENT_KEY,
-            serverURL: process.env.SERVER_URL + process.env.PARSE_MOUNT || 'http://localhost:1337/parse', // Don't forget to change to https if needed
+            serverURL: process.env.SERVER_URL + ':' + process.env.PORT + process.env.PARSE_MOUNT, // Don't forget to change to https if needed
             verbose: process.env.ENABLE_PARSE_VERBOSE_MODE == 'true',
             logLevel: 'error',
             liveQuery: {
@@ -48,7 +48,7 @@ export class ParseAPI extends BaseAPI {
             },
             verifyUserEmails: true,
             emailVerifyTokenValidityDuration: 24 * 60 * 60, // in seconds (2 hours = 7200 seconds)
-            publicServerURL: process.env.SERVER_URL + process.env.PARSE_MOUNT || 'http://localhost:1337/parse',
+            publicServerURL: process.env.SERVER_URL + process.env.PARSE_MOUNT,
             appName: 'Meine-Stadt-rettet',
             emailAdapter: {
                 module: 'parse-server-mailgun',
