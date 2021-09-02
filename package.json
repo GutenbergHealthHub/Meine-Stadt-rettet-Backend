@@ -39,7 +39,7 @@
         "node-schedule": "^2.0.0",
         "npm": "^7.19.0",
         "parse": "^3.3.0",
-        "parse-server": "^4.5.2",
+        "parse-server": "^4.10.3",
         "parse-server-mailgun": "^2.4.15",
         "rxjs": "^7.1.0",
         "supercluster": "^7.1.3"
